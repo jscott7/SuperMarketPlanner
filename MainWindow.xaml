@@ -1,0 +1,171 @@
+﻿<Window x:Class="SuperMarketPlanner.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:src="clr-namespace:SuperMarketPlanner"
+        Title="Supermarket Planner" Height="700" Width="800" WindowStyle="ThreeDBorderWindow" Icon="/SuperMarketPlanner;component/Images/Settings.ico">
+    <Window.Resources>
+        <!-- Meal Data needs to be in the window resources so it can be accessed easily by the save event -->
+        <XmlDataProvider x:Name="Meals" x:Key="MealData" Source="./Data/SuperMarketDataMeals.xml" XPath="/SuperMarketData/Meals/Meal"/>
+        <XmlDataProvider x:Name="Staples" x:Key="StaplesData" Source="./Data/SuperMarketDataStaples.xml" XPath="/SuperMarketData/Staples/Staple"/>
+        
+        <src:SelectedMealCollection x:Key="SelectedMealCollectionData"/>
+        <src:SelectedIngredientsCollection x:Key="SelectedIngredientsCollectionData"/>
+        
+        <Style TargetType="TextBlock" x:Key="SelectedMealStyle">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontFamily" Value="Verdana"/>
+        </Style>
+        
+        <DataTemplate x:Key="SelectedMealLayout">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                <TextBlock Style="{StaticResource SelectedMealStyle}" Margin="2" Text="{Binding Date}"></TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Width="50"/>
+                    <TextBlock Style="{StaticResource SelectedMealStyle}" Margin="2" Text="{Binding Meal}"></TextBlock>
+                </StackPanel>
+              </StackPanel>
+        </DataTemplate>
+        
+        <DataTemplate x:Key="SelectedIngredientsLayout">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                <TextBlock Style="{StaticResource SelectedMealStyle}" Margin="2" Text="{Binding Ingredient}"></TextBlock>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="editDeleteButtonTemplate">
+              <Button Width="20" Click="Button_Click">
+                <Image Source="/SuperMarketPlanner;component/Images/noresults_uncompressed.ico"></Image>
+            </Button>                               
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <ToolBar Height="64" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Name="toolBar1" VerticalAlignment="Stretch" >
+            <Button Click="newListClick">
+                <Image Source="ToolbarGraphics\Generic_Document.ico" ToolTip="New List" />
+            </Button>
+            <Button>
+                <Image Source="ToolbarGraphics\folder_open.ico" ToolTip="Open List" />
+            </Button>
+            <Button Click="Save_Click" >
+                <Image Source="ToolbarGraphics\FloppyDisk.ico" ToolTip="Save List" />
+            </Button>
+            <Button Click="printList">
+                <Image Source="ToolbarGraphics\printer.ico" ToolTip="Print List" />
+            </Button>
+        </ToolBar>
+        <GridSplitter Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Width="4"/>
+        <DockPanel Grid.Column="0" Grid.Row="1">
+            <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="listTabControl">
+                <TabItem Header="Daily List" Name="dailyListTab">
+                    <ScrollViewer>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal" >
+                                <TextBlock HorizontalAlignment="Left" Style="{StaticResource SelectedMealStyle}" FontWeight="ExtraBold" Margin="2" Text="Date"></TextBlock>
+                            </StackPanel>
+                            <StackPanel>
+                                <ItemsControl Name="dateItems" HorizontalAlignment="Left"
+    ItemsSource="{Binding Source={StaticResource SelectedMealCollectionData}}" ItemTemplate="{StaticResource SelectedMealLayout}" AllowDrop="True" DragEnter="list_DragEnter" Drop="list_DragDrop">
+                                </ItemsControl>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem Header="All Shopping Items" Name="allItemsTab">
+                    <ScrollViewer>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                            <ItemsControl Name="selectedIngredients" HorizontalAlignment="Left" ItemsSource="{Binding Source={StaticResource SelectedIngredientsCollectionData}}"
+                                          ItemTemplate="{StaticResource SelectedIngredientsLayout}"></ItemsControl>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
+        </DockPanel>
+        <DockPanel Grid.Column="1" Grid.Row="1" >
+            <TabControl  HorizontalAlignment="Stretch" Name="tabControl1" VerticalAlignment="Stretch" >
+                <TabItem Header="Meals" Name="tabItem1">
+                    <Grid>
+                        <DataGrid Name="mealGrid" RowDetailsVisibilityMode="Collapsed" AllowDrop="True" Background="White" GridLinesVisibility="None" DataContext="{StaticResource MealData}" ItemsSource="{Binding}" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" SelectionUnit="FullRow" SelectionMode="Single" PreviewMouseLeftButtonDown="mealGrid_PreviewMouseLeftButtonDown" MouseMove="mealGrid_MouseMove" CanUserAddRows="True">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="{x:Type DataGridRow}">
+                                    <EventSetter Event="MouseDoubleClick" Handler="mealGrid_RowDoubleClick"/>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Width="*">                                  
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Vertical">
+                                                <TextBlock HorizontalAlignment="Center" Text="{Binding XPath=@name}" FontSize="16" FontFamily="Tahoma" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>                                
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <DataGrid Name="ingredientsGrid" ItemsSource="{Binding XPath=Ingredients/Ingredient}" AutoGenerateColumns="false" CanUserAddRows="True" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserSortColumns="False" CanUserResizeRows="False">
+                                            <DataGrid.Columns>
+                                                <!-- You cannot attach to event from templates that are inlined in RowDetailsTemplate -->
+                                                <!-- Therefor put this into the Window resources -->
+                                                <DataGridTemplateColumn CellTemplate="{StaticResource editDeleteButtonTemplate}"/>    
+                                                <DataGridTextColumn Header="Ingredients" Binding="{Binding XPath=.}" Width="Auto"/>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <Button Content="Add New Ingredient" Click="ButtonClick_AddNewIngredient"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Staples" Name="tabItem2">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="20"/>
+                        </Grid.RowDefinitions>
+                        <DataGrid Grid.Row="0" Name="staplesGrid" AllowDrop="True" Background="White" GridLinesVisibility="None" DataContext="{StaticResource StaplesData}" ItemsSource="{Binding}" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserSortColumns="True" CanUserResizeColumns="False" CanUserResizeRows="False" SelectionUnit="FullRow" SelectionMode="Single" PreviewMouseLeftButtonDown="staplesGrid_PreviewMouseLeftButtonDown" MouseMove="staplesGrid_MouseMove" CanUserAddRows="True">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Width="20" Click="Button_Click">
+                                                <Image Source="/SuperMarketPlanner;component/Images/noresults_uncompressed.ico"></Image>
+                                            </Button>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Binding="{Binding XPath=@name}" FontSize="16" FontFamily="Tahoma" />
+                                <!--     <DataGridTemplateColumn Width="*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Vertical">
+                                                <StackPanel Orientation="Horizontal">
+        
+                                                    <Button Width="20" Click="Button_Click">
+                                                        <Image Source="/SuperMarketPlanner;component/Images/noresults_uncompressed.ico"></Image>
+                                                    </Button>
+                                                    <TextBlock HorizontalAlignment="Center" Text="{Binding XPath=@name}" FontSize="16" FontFamily="Tahoma" /> 
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>-->
+                            </DataGrid.Columns> 
+                        </DataGrid>
+                        <Button Grid.Row="1" Content="Add New Staple" Click="ButtonClick_AddNewStaple"/>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </DockPanel>
+    </Grid>
+</Window>

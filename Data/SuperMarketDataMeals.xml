@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SuperMarketData>
+  <Meals>
+    <Meal name="Louisiana Rice" type="Vegetarian">
+      <Ingredients>
+        <Ingredient>Brown Rice</Ingredient>
+        <Ingredient>Onion</Ingredient>
+        <Ingredient>Clove Garlic</Ingredient>
+        <Ingredient>Green Pepper</Ingredient>
+        <Ingredient>Mushrooms</Ingredient>
+        <Ingredient>Vegetable stock cube</Ingredient>
+        <Ingredient>Chopped Tomatoes</Ingredient>
+        <Ingredient>Kidney Beans</Ingredient>
+        <Ingredient>Spinach</Ingredient>
+        <Ingredient>Peas</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Salmon + Roasted Veg" type="Fish Healthy">
+      <Ingredients>
+        <Ingredient>Salmon</Ingredient>
+        <Ingredient>Courgettes</Ingredient>
+        <Ingredient>Red Pepper</Ingredient>
+        <Ingredient>Tomatoes</Ingredient>
+        <Ingredient>Onion</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Prawn Stirfry" type="">
+      <Ingredients>
+        <Ingredient name="Prawns">Prawns</Ingredient>
+        <Ingredient name="Stirfry veg">Stirfry Veg</Ingredient>
+        <Ingredient name="Stirfry sauce">Stirfry sauce</Ingredient>
+        <Ingredient name="Noodles">Noodles</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Omelette with Feta,Spinach or Peas" type="Vegetarian, Quick">
+      <Ingredients>
+        <Ingredient>Eggs</Ingredient>
+        <Ingredient>Feta</Ingredient>
+        <Ingredient>Spinach or Peas</Ingredient>
+        <Ingredient>Salad</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Mushroom Omelette" type ="Vegetarian, Quick">
+      <Ingredients>
+        <Ingredient>Eggs</Ingredient>
+        <Ingredient>Mushrooms</Ingredient>
+        <Ingredient>Cheese</Ingredient>
+        <Ingredient>Salad</Ingredient>       
+      </Ingredients>
+    </Meal>
+    <Meal name="Lamb Chops + Veg" type="">
+      <Ingredients>
+        <Ingredient>Lamb Chops</Ingredient>
+        <Ingredient>Brocolli</Ingredient>
+        <Ingredient>Courgette</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Sweet Potato + Feta + Salad" type="Vegetarian">
+      <Ingredients>
+        <Ingredient>Sweet Potato</Ingredient>
+        <Ingredient>Feta</Ingredient>
+        <Ingredient>Spring onions</Ingredient>
+        <Ingredient>Ground Cumin</Ingredient>
+        <Ingredient>Orange Juice</Ingredient>
+        <Ingredient>Salad</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Quiche + Salad" type="Quick">
+      <Ingredients>
+        <Ingredient>Quiche</Ingredient>
+        <Ingredient>Salad</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Fresh Pasta + Salad" type="Quick">
+      <Ingredients>
+        <Ingredient>Fresh Pasta</Ingredient>
+        <Ingredient>Pasta Sauce</Ingredient>
+        <Ingredient>Salad</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Steak, Sweet Potato + Greens" type="Indulgent">
+      <Ingredients>
+        <Ingredient>Steak</Ingredient>
+        <Ingredient>Sweet Potato</Ingredient>
+        <Ingredient>Beans</Ingredient>
+      </Ingredients>     
+    </Meal>
+    <Meal name="Thai Curry, Chicken + Greens" type="Indulgent">
+      <Ingredients>
+        <Ingredient>Chicken</Ingredient>
+        <Ingredient>Thai Curry Sauce</Ingredient>
+        <Ingredient>Rice</Ingredient>
+        <Ingredient>Beans</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Tomato, Saffron Prawns" type="Healthy">
+      <Ingredients>
+        <Ingredient>Tomato</Ingredient>
+        <Ingredient>Prawns</Ingredient>
+        <Ingredient>Rice</Ingredient>
+        <Ingredient>Lemon</Ingredient>
+        <Ingredient>Saffron</Ingredient>
+        <Ingredient>Coriander</Ingredient>
+        <Ingredient>Spinach</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Stuffed Pepper + Salad" type="Vegetarian">
+      <Ingredients>
+        <Ingredient>Pepper</Ingredient>
+        <Ingredient>Salad</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Goats Cheese + Red Onion Tart" type="Vegetarian">
+      <Ingredients>
+        <Ingredient>Goats Cheese</Ingredient>
+        <Ingredient>Red Onion</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Fisherman's Pie + Veg" type="">
+      <Ingredients>
+      </Ingredients>
+    </Meal>
+    <Meal name="Roast Chicken" type="">
+      <Ingredients>
+        <Ingredient>Whole Chicken</Ingredient>
+        <Ingredient>New Potatoes</Ingredient>
+        <Ingredient>Brocolli</Ingredient>
+        <Ingredient>Carrots</Ingredient>
+        <Ingredient>Courgette</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Shepherd's Pie" type="">
+      <Ingredients>
+      </Ingredients>
+    </Meal>
+    <Meal name="Haddock and Cheese Fishcakes + Salad" type="">
+      <Ingredients>
+        <Ingredient>Haddock and Cheese Fishcakes</Ingredient>
+        <Ingredient>Salad</Ingredient>
+      </Ingredients>      
+    </Meal>
+    <Meal name="Burgers + Salad" type="">
+      <Ingredients>
+        <Ingredient>Burgers</Ingredient>
+        <Ingredient>Buns</Ingredient>
+        <Ingredient>Cheese</Ingredient>
+        <Ingredient>Salad</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Beef + Apple Burgers + Salad" type="">
+      <Ingredients>
+        <Ingredient>Burgers</Ingredient>
+        <Ingredient>Buns</Ingredient>
+        <Ingredient>Cheese</Ingredient>
+        <Ingredient>Salad</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Aubergine + Chickpea Tagine" type="">
+      <Ingredients>
+        <Ingredient>Aubergine</Ingredient>
+        <Ingredient>Chickpea</Ingredient>
+        <Ingredient>Cous Cous</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Greek Salad" type="Healthy">
+      <Ingredients>
+        <Ingredient>Green Pepper</Ingredient>
+        <Ingredient>Red Onion</Ingredient>
+        <Ingredient>Olives</Ingredient>
+        <Ingredient>Feta</Ingredient>
+        <Ingredient>Cucumber</Ingredient>
+        <Ingredient>Oregano</Ingredient>
+        <Ingredient>Tomato</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Cold Meats + Salad" type="Healthy">
+      <Ingredients>
+        <Ingredient>Cold Meats</Ingredient>
+        <Ingredient>New Potatoes</Ingredient>
+        <Ingredient>Salad</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="White Fish + Greens" type="Healthy">
+      <Ingredients>
+        <Ingredient>White Fish</Ingredient>
+        <Ingredient>Courgettes</Ingredient>
+        <Ingredient>Brocolli</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Turkey Fahitas + Salad" type="Indulgent">
+      <Ingredients>
+        <Ingredient>Turkey</Ingredient>
+        <Ingredient>Pepper</Ingredient>
+        <Ingredient>Onion</Ingredient>
+        <Ingredient>Fahita Mix</Ingredient>
+        <Ingredient>Salad</Ingredient>
+        <Ingredient>Chips</Ingredient>
+        <Ingredient>Dips</Ingredient>
+        <Ingredient>Wraps</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Sausages + Mash" type="Indulgent">
+      <Ingredients>
+        <Ingredient>Sausages</Ingredient>
+        <Ingredient>Potatoes</Ingredient>
+        <Ingredient>Green Beans</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Pizza + Salad" type="Indulgent">
+      <Ingredients>
+        <Ingredient>Pizza</Ingredient>
+        <Ingredient>Salad</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Butternut Squash Risotto" type="">
+      <Ingredients>
+        <Ingredient>Butternut Squash</Ingredient>
+        <Ingredient>Risotto Rice</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Chicken Casserole" type="">
+      <Ingredients>
+        <Ingredient>Chicken</Ingredient>
+        <Ingredient>Casserole Veg</Ingredient>
+        <Ingredient>Potatoes</Ingredient> 
+      </Ingredients>
+    </Meal>
+    <Meal name="Spaghetti Bolognese" type="">
+      <Ingredients>
+        <Ingredient>Lean Mince</Ingredient>
+        <Ingredient>Onion</Ingredient>
+        <Ingredient>Chopped Tomato</Ingredient>
+        <Ingredient>Spaghetti</Ingredient>
+      </Ingredients>
+    </Meal>
+    <Meal name="Chicken Stirfry" type="">
+      <Ingredients>
+        <Ingredient>Chicken</Ingredient>
+        <Ingredient>Stirfry Sauce</Ingredient>
+        <Ingredient>Stirfry Veg</Ingredient>
+        <Ingredient>Noodles</Ingredient>
+      </Ingredients>
+    </Meal>
+  </Meals>
+</SuperMarketData>

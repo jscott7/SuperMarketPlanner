@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SuperMarketData>
+  <Staples>
+    <Staple name="Nappies Size 4"/>
+    <Staple name="French Mustard"/>
+    <Staple name="Olive Oil"/>
+    <Staple name="Salad Dressing"/>
+    <Staple name="Full Milk 12 Pints"/>
+    <Staple name="Semi Skimmed Milk 6 Pints"/>
+    <Staple name="Bread"/>
+  </Staples>
+</SuperMarketData>
