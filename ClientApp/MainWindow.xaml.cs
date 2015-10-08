@@ -231,8 +231,6 @@ namespace SuperMarketPlanner
             parent.AppendChild(newElement);
         }
 
-        private int m_stapleIndex = 0;
-
         private void ButtonClick_AddNewStaple(object sender, RoutedEventArgs e)
         {
             var xmlDataProvider = (XmlDataProvider)this.FindResource("StaplesData");
@@ -243,6 +241,7 @@ namespace SuperMarketPlanner
             // We can't change the Items collection directly, so we need to find the parent XmlNode and append the child to that
             xmlDataProvider.Document.SelectSingleNode("//Staples").AppendChild(newElement);
         }
+
         #endregion
 
         #region Drag Drop code
