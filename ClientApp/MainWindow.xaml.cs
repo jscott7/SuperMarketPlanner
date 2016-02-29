@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Drawing.Printing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -15,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace SuperMarketPlanner
 {
@@ -39,7 +42,7 @@ namespace SuperMarketPlanner
         {
             InitializeComponent();   
             
-            m_printDocument.PrintPage += new PrintPageEventHandler(m_printDocument_PrintPage);          
+            m_printDocument.PrintPage += new PrintPageEventHandler(m_printDocument_PrintPage);                  
         }
 
         #region Printing 
@@ -128,6 +131,16 @@ namespace SuperMarketPlanner
             }
         }
 
+        private void publishMeals()
+        {
+            SelectedMealCollection colData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
+            XmlSerializer xs = new XmlSerializer(typeof(SelectedMealCollection));
+            using (StreamWriter writer = new StreamWriter("test.xml"))
+            {
+                xs.Serialize(writer, colData);
+            }
+        }
+
         #endregion
 
         #region ToolBar handlers
@@ -209,6 +222,14 @@ namespace SuperMarketPlanner
         {
             var row = (DataGridRow)sender;
             row.DetailsVisibility = row.DetailsVisibility == System.Windows.Visibility.Collapsed ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+
+            // When we collapse the details view we need to refresh the grid, otherwise the rows beneath will still refer to the expanded item
+            // This is essentially a resizing problem
+            if (row.DetailsVisibility == Visibility.Collapsed)
+            {
+                mealGrid.CommitEdit(DataGridEditingUnit.Row, true);
+                mealGrid.Items.Refresh();
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
