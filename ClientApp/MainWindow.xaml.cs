@@ -5,7 +5,11 @@ using System.ComponentModel;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
+using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -110,6 +114,8 @@ namespace SuperMarketPlanner
 
         private void printList(object sender, RoutedEventArgs e)
         {
+            publishMeals();
+
             /*
             System.Windows.Forms.PrintPreviewDialog printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog(); // instantiate new print preview dialog
             printPreviewDialog1.Document = m_printDocument;        
@@ -131,13 +137,72 @@ namespace SuperMarketPlanner
             }
         }
 
+        public class FileParameter
+        {
+            public byte[] File { get; set; }
+            public string FileName { get; set; }
+            public string ContentType { get; set; }
+            public FileParameter(byte[] file) : this(file, null) { }
+            public FileParameter(byte[] file, string filename) : this(file, filename, null) { }
+            public FileParameter(byte[] file, string filename, string contenttype)
+            {
+                File = file;
+                FileName = filename;
+                ContentType = contenttype;
+            }
+        }
+
+        /// <summary>
+        /// Publish meal data
+        /// </summary>
         private void publishMeals()
         {
             SelectedMealCollection colData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
             XmlSerializer xs = new XmlSerializer(typeof(SelectedMealCollection));
-            using (StreamWriter writer = new StreamWriter("test.xml"))
+
+            // TODO serialise direct to byte array
+            string xml = "";
+
+            using (StringWriter writer = new StringWriter())
             {
                 xs.Serialize(writer, colData);
+                xml = writer.ToString();
+            }
+
+            //http://www.briangrinstead.com/blog/multipart-form-post-in-c
+            post( xml );
+       
+        }
+
+        /// <summary>
+        /// Post the xml string to the webservice on the Raspberry Pi
+        /// </summary>
+        /// <param name="payload"></param>
+        /// <returns></returns>
+        private async Task<string> post( string payload )
+        {
+            
+           // string json = "{ \"test\" : \"this\", \"array\" :[ \"as\" : \"b\" } ";
+            using (var client = new HttpClient())
+            {
+                var postData = new KeyValuePair<string, string>[]
+                {
+                     new KeyValuePair<string, string>("data", payload),
+                };
+
+                var content = new FormUrlEncodedContent(postData);
+
+                var response = await client.PostAsync("http://192.168.0.2:8080/index", content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var message = String.Format("Server returned HTTP error {0}: {1}.", (int)response.StatusCode, response.ReasonPhrase);
+                    throw new InvalidOperationException(message);
+                }
+
+                var data = await response.Content.ReadAsStringAsync();
+
+                return data;
             }
         }
 
