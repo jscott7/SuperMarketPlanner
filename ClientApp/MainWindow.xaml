@@ -82,7 +82,7 @@
                     <ScrollViewer>
                         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
                             <ItemsControl Name="selectedIngredients" HorizontalAlignment="Left" ItemsSource="{Binding Source={StaticResource SelectedIngredientsCollectionData}}"
-                                          ItemTemplate="{StaticResource SelectedIngredientsLayout}"></ItemsControl>
+                                          ItemTemplate="{StaticResource SelectedIngredientsLayout}" AllowDrop="True" DragEnter="allItems_DragEnter" Drop="allItems_DragDrop"></ItemsControl>
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>

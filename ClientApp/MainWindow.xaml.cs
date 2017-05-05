@@ -38,7 +38,12 @@ namespace SuperMarketPlanner
         /// <summary>
         /// The index of the SelectedMealCollection being dragged
         /// </summary>
-        private int index = -1;     
+        private int index = -1;
+
+        /// <summary>
+        /// The index of the staple being dragged
+        /// </summary>
+        private int staplesIndex = -1;
 
         private PrintDocument m_printDocument = new PrintDocument();
 
@@ -160,11 +165,12 @@ namespace SuperMarketPlanner
             SelectedMealCollection colData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
             XmlSerializer xs = new XmlSerializer(typeof(SelectedMealCollection));
 
-            // TODO serialise direct to byte array
             string xml = "";
 
             using (StringWriter writer = new StringWriter())
             {
+                // colData = list of selected meals and ingredients
+                // staples is a different xml
                 xs.Serialize(writer, colData);
                 xml = writer.ToString();
             }
@@ -340,9 +346,9 @@ namespace SuperMarketPlanner
         /// <summary>
         /// Returns the row of the DataGrid that's been clicked on in the Drag event
         /// </summary>
-        private DataGridRow getDataGridRowItem(int index)
+        private DataGridRow getDataGridRowItem(DataGrid inputGrid, int index)
         {
-            return mealGrid.ItemContainerGenerator.ContainerFromIndex(index) as DataGridRow;
+            return inputGrid.ItemContainerGenerator.ContainerFromIndex(index) as DataGridRow;
         }
 
         private bool isTheMouseOnTargetRow(Visual theTarget, GetDragDropPosition pos)
@@ -366,7 +372,7 @@ namespace SuperMarketPlanner
             int curIndex = -1;
             for (int i = 0; i < inputGrid.Items.Count; i++)
             {
-                DataGridRow itm = getDataGridRowItem(i);
+                DataGridRow itm = getDataGridRowItem(inputGrid, i);
                 if (isTheMouseOnTargetRow(itm, pos))
                 {
                     curIndex = i;
@@ -388,12 +394,14 @@ namespace SuperMarketPlanner
         {
             // Store the mouse position
             startPoint = e.GetPosition(null);
-            index = getDataGridItemCurrentRowIndex(e.GetPosition, staplesGrid);
+
+            //TODO Make this work for staples grid, currently it's looking at the mealgrid
+            staplesIndex = getDataGridItemCurrentRowIndex(e.GetPosition, staplesGrid);
         }
 
         private void staplesGrid_MouseMove(object sender, MouseEventArgs e)
         {
-            if (index < 0) { return; }
+            if (staplesIndex < 0) { return; }
             Point currentPoint = e.GetPosition(null);
             Vector diff = startPoint - currentPoint;
 
@@ -402,7 +410,7 @@ namespace SuperMarketPlanner
                 Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
             {
 
-                var obj = staplesGrid.Items[index] as XmlElement;
+                var obj = staplesGrid.Items[staplesIndex] as XmlElement;
 
                 // Initialise the drag & drop operation
                 DataObject dragData = new DataObject("dragStapleFormat", obj);
@@ -439,7 +447,15 @@ namespace SuperMarketPlanner
                 e.Effects = DragDropEffects.None;
             }
         }
-                
+
+        private void allItems_DragEnter(object sender, DragEventArgs e)
+        {
+            if (!e.Data.GetDataPresent("dragStapleFormat"))
+            {
+                e.Effects = DragDropEffects.None;
+            }
+        }
+
         private int DecideDropTarget(DragEventArgs e, ItemsControl targetItemsControl)
         {
             int targetItemsControlCount = targetItemsControl.Items.Count;
@@ -469,23 +485,25 @@ namespace SuperMarketPlanner
             return insertionIndex;
         }
 
+        private void allItems_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent("dragStapleFormat"))
+            {
+                SelectedIngredientsCollection ingredientData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
+                var stapleElement = e.Data.GetData("dragStapleFormat") as XmlElement;
+                String stapleName = stapleElement.Attributes.GetNamedItem("name").Value;
+                SelectedIngredient staple = new SelectedIngredient(stapleName);
+                ingredientData.Add(staple);
+            }
+        }
+
         /// <summary>
         /// The drop event
         /// </summary>
         private void list_DragDrop(object sender, DragEventArgs e)
         {
-            List<string> staples = new List<string>();
             if (e.Data.GetDataPresent("dragMealFormat"))
             {
-                foreach (var row in staplesGrid.Items)
-                {
-                    XmlElement element = row as XmlElement;
-                    if (element != null)
-                    {
-                        staples.Add(element.Attributes["name"].Value);
-                    }
-                }
-
                 // sender is itemsControl 
                 // Update the table data
                 int updateIndex = DecideDropTarget(e, (ItemsControl)sender);
@@ -519,12 +537,6 @@ namespace SuperMarketPlanner
                         SelectedIngredient selectedIngredient = new SelectedIngredient(ingredient);
                         ingredientData.Add(selectedIngredient);
                     }
-                }
-
-                foreach (string staple in staples)
-                {
-                    SelectedIngredient selectedStaple = new SelectedIngredient(staple);
-                    ingredientData.Add(selectedStaple);
                 }
             }
 
