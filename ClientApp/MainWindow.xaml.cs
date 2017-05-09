@@ -160,25 +160,46 @@ namespace SuperMarketPlanner
         /// <summary>
         /// Publish meal data
         /// </summary>
-        private void publishMeals()
+        private async void publishMeals()
         {
             SelectedMealCollection colData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
             XmlSerializer xs = new XmlSerializer(typeof(SelectedMealCollection));
+            StringBuilder xmlBuilder = new StringBuilder();
 
-            string xml = "";
+            var emptyNamepsaces = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
+            var settings = new XmlWriterSettings();
 
-            using (StringWriter writer = new StringWriter())
+            settings.OmitXmlDeclaration = true;
+
+            xmlBuilder.AppendLine("<ShoppingList>");
+
+            using (StringWriter stream = new StringWriter())
             {
-                // colData = list of selected meals and ingredients
-                // staples is a different xml
-                xs.Serialize(writer, colData);
-                xml = writer.ToString();
+                using (var writer = XmlWriter.Create(stream, settings))
+                {
+                    xs.Serialize(writer, colData, emptyNamepsaces);
+                    xmlBuilder.Append(stream.ToString());
+                }
             }
 
+            SelectedIngredientsCollection shoppingItemsData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
+            XmlSerializer xs2 = new XmlSerializer(typeof(SelectedIngredientsCollection));
+
+            using (StringWriter stream = new StringWriter())
+            {
+                using (var writer = XmlWriter.Create(stream, settings))
+                {
+                    xs2.Serialize(writer, shoppingItemsData, emptyNamepsaces);
+                    xmlBuilder.Append(stream.ToString());
+                }
+            }
+
+            xmlBuilder.AppendLine("</ShoppingList>");
+
             //http://www.briangrinstead.com/blog/multipart-form-post-in-c
-            post( xml );
-       
+            await post(xmlBuilder.ToString());
         }
+
 
         /// <summary>
         /// Post the xml string to the webservice on the Raspberry Pi
@@ -198,7 +219,7 @@ namespace SuperMarketPlanner
 
                 var content = new FormUrlEncodedContent(postData);
 
-                var response = await client.PostAsync("http://192.168.0.2:8080/index", content);
+                var response = await client.PostAsync("http://192.168.0.46:8080/index", content);
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -394,8 +415,6 @@ namespace SuperMarketPlanner
         {
             // Store the mouse position
             startPoint = e.GetPosition(null);
-
-            //TODO Make this work for staples grid, currently it's looking at the mealgrid
             staplesIndex = getDataGridItemCurrentRowIndex(e.GetPosition, staplesGrid);
         }
 

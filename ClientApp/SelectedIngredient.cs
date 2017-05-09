@@ -23,6 +23,12 @@ namespace SuperMarketPlanner
             }
         }
 
+        /// <summary>
+        /// Parameterless constructor required for serialization
+        /// </summary>
+        public SelectedIngredient()
+        { }
+
         public SelectedIngredient(string ingredient)
         {
             m_ingredient = ingredient;
