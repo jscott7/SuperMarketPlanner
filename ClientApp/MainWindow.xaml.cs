@@ -1,26 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Drawing.Printing;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace SuperMarketPlanner
@@ -44,6 +34,11 @@ namespace SuperMarketPlanner
         /// The index of the staple being dragged
         /// </summary>
         private int staplesIndex = -1;
+
+        /// <summary>
+        /// Start date of current list
+        /// </summary>
+        private DateTime startDate;
 
         private PrintDocument m_printDocument = new PrintDocument();
 
@@ -207,19 +202,18 @@ namespace SuperMarketPlanner
         /// <param name="payload"></param>
         /// <returns></returns>
         private async Task<string> post( string payload )
-        {
-            
-           // string json = "{ \"test\" : \"this\", \"array\" :[ \"as\" : \"b\" } ";
+        {          
             using (var client = new HttpClient())
             {
+                // Key is date of start of list in yyyyMMdd format         
                 var postData = new KeyValuePair<string, string>[]
                 {
-                     new KeyValuePair<string, string>("data", payload),
+                     new KeyValuePair<string, string>(startDate.ToString("yyyyMMdd"), payload)
                 };
-
+           
                 var content = new FormUrlEncodedContent(postData);
 
-                var response = await client.PostAsync("http://192.168.0.46:8080/index", content);
+                var response = await client.PostAsync("http://192.168.0.200:8080/index", content);
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -254,6 +248,8 @@ namespace SuperMarketPlanner
             }
 
             DateTime date = dlg.SelectedDate;
+            startDate = date;
+
             int numberOfUnits = dlg.NumberOfUnits;
             UnitsEnum unitSize = dlg.UnitSize;
 
@@ -374,7 +370,6 @@ namespace SuperMarketPlanner
 
         private bool isTheMouseOnTargetRow(Visual theTarget, GetDragDropPosition pos)
         {
-            // BUG: If we've expanded the row and collapsed it - this returns true for the wrong row
             if (theTarget == null)
             {
                 return false;
@@ -511,7 +506,7 @@ namespace SuperMarketPlanner
                 SelectedIngredientsCollection ingredientData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
                 var stapleElement = e.Data.GetData("dragStapleFormat") as XmlElement;
                 String stapleName = stapleElement.Attributes.GetNamedItem("name").Value;
-                SelectedIngredient staple = new SelectedIngredient(stapleName);
+                SelectedIngredient staple = new SelectedIngredient(stapleName, "");
                 ingredientData.Add(staple);
             }
         }
@@ -553,7 +548,7 @@ namespace SuperMarketPlanner
                     if (meal.Ingredients == null) {continue;}
                     foreach (string ingredient in meal.Ingredients)
                     {
-                        SelectedIngredient selectedIngredient = new SelectedIngredient(ingredient);
+                        SelectedIngredient selectedIngredient = new SelectedIngredient(ingredient, mealToUpdate.Date);
                         ingredientData.Add(selectedIngredient);
                     }
                 }
