@@ -525,6 +525,7 @@ namespace SuperMarketPlanner
                 SelectedMealCollection colData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
                 SelectedMeal mealToUpdate = colData[updateIndex];
                 mealToUpdate.Meal = xElement.GetAttribute("name");
+
                 if (mealToUpdate.Ingredients == null)
                 {
                     mealToUpdate.Ingredients = new List<string>();
@@ -543,12 +544,16 @@ namespace SuperMarketPlanner
                 SelectedIngredientsCollection ingredientData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
                 ingredientData.Clear();
 
+                string pattern = "dddd MMM dd";
                 foreach (SelectedMeal meal in colData)
                 {
                     if (meal.Ingredients == null) {continue;}
                     foreach (string ingredient in meal.Ingredients)
-                    {
-                        SelectedIngredient selectedIngredient = new SelectedIngredient(ingredient, mealToUpdate.Date);
+                    {              
+                        DateTime parsedDate = DateTime.Now;
+                        DateTime.TryParseExact(mealToUpdate.Date, pattern, null, System.Globalization.DateTimeStyles.None, out parsedDate);
+
+                        SelectedIngredient selectedIngredient = new SelectedIngredient(ingredient, parsedDate.ToString("yyyy-MM-dd"));
                         ingredientData.Add(selectedIngredient);
                     }
                 }
