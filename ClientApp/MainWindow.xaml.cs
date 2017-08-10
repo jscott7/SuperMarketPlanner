@@ -547,12 +547,12 @@ namespace SuperMarketPlanner
                 string pattern = "dddd MMM dd";
                 foreach (SelectedMeal meal in colData)
                 {
+                    DateTime parsedDate = DateTime.Now;
+                    DateTime.TryParseExact(meal.Date, pattern, null, System.Globalization.DateTimeStyles.None, out parsedDate);
+
                     if (meal.Ingredients == null) {continue;}
                     foreach (string ingredient in meal.Ingredients)
-                    {              
-                        DateTime parsedDate = DateTime.Now;
-                        DateTime.TryParseExact(mealToUpdate.Date, pattern, null, System.Globalization.DateTimeStyles.None, out parsedDate);
-
+                    {                   
                         SelectedIngredient selectedIngredient = new SelectedIngredient(ingredient, parsedDate.ToString("yyyy-MM-dd"));
                         ingredientData.Add(selectedIngredient);
                     }
