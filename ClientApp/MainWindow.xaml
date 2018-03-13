@@ -5,8 +5,8 @@
         Title="Supermarket Planner" Height="700" Width="800" WindowStyle="ThreeDBorderWindow" Icon="/SuperMarketPlanner;component/Images/Settings.ico">
     <Window.Resources>
         <!-- Meal Data needs to be in the window resources so it can be accessed easily by the save event -->
-        <XmlDataProvider x:Name="Meals" x:Key="MealData" Source="./Data/SuperMarketDataMeals.xml" XPath="/SuperMarketData/Meals/Meal"/>
-        <XmlDataProvider x:Name="Staples" x:Key="StaplesData" Source="./Data/SuperMarketDataStaples.xml" XPath="/SuperMarketData/Staples/Staple"/>
+        <XmlDataProvider x:Name="Meals" x:Key="MealData" XPath="/SuperMarketData/Meals/Meal"/>
+        <XmlDataProvider x:Name="Staples" x:Key="StaplesData" XPath="/SuperMarketData/Staples/Staple"/>
         
         <src:SelectedMealCollection x:Key="SelectedMealCollectionData"/>
         <src:SelectedIngredientsCollection x:Key="SelectedIngredientsCollectionData"/>

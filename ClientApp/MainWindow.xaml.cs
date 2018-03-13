@@ -44,9 +44,38 @@ namespace SuperMarketPlanner
 
         public MainWindow()
         {
-            InitializeComponent();   
-            
+            InitializeComponent();
+
+            SetupXmlDataProviderSources();
             m_printDocument.PrintPage += new PrintPageEventHandler(m_printDocument_PrintPage);                  
+        }
+
+        private void SetupXmlDataProviderSources()
+        {
+            // We need to set the XmlDataProvider to be in the appData folder
+            XmlDataProvider mealsXmlDataProvider = FindResource("MealData") as XmlDataProvider;
+            XmlDataProvider staplesXmlDataProvider = FindResource("StaplesData") as XmlDataProvider;
+
+            string mealsPath = AppDataPath + "\\SuperMarketPlanner\\SuperMarketDataMeals.xml";
+            string staplesPath = AppDataPath + "\\SuperMarketPlanner\\SuperMarketDataStaples.xml";
+
+            // One-time only on startup
+            if (!File.Exists(mealsPath))
+            {
+                FirstTimeAppDataSetup();
+            }
+
+            mealsXmlDataProvider.Source = new Uri(mealsPath);
+            staplesXmlDataProvider.Source = new Uri(staplesPath);
+        }
+
+        private void FirstTimeAppDataSetup(  )
+        {
+            string xmlSourceDirectory = System.IO.Directory.GetCurrentDirectory() + "\\Data";
+            string destinationDirectory = AppDataPath + "\\SuperMarketPlanner";
+            Directory.CreateDirectory(destinationDirectory);
+            File.Copy(xmlSourceDirectory + "\\SuperMarketDataMeals.xml", destinationDirectory + "\\SuperMarketDataMeals.xml" );
+            File.Copy(xmlSourceDirectory + "\\SuperMarketDataStaples.xml", destinationDirectory + "\\SuperMarketDataStaples.xml");
         }
 
         #region Printing 
@@ -213,7 +242,7 @@ namespace SuperMarketPlanner
            
                 var content = new FormUrlEncodedContent(postData);
 
-                var response = await client.PostAsync("http://192.168.0.200:8080/index", content);
+                var response = await client.PostAsync("http://192.168.0.202:8080/index", content);
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -286,14 +315,29 @@ namespace SuperMarketPlanner
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             var xmlMealDataProvider = (XmlDataProvider)this.FindResource("MealData");
-            string localMealsSource = xmlMealDataProvider.Source.ToString();
-            xmlMealDataProvider.Document.Save(localMealsSource);
+        
+            // TODO : Refactor
+            Uri mealUri = new Uri(xmlMealDataProvider.Source.ToString());
+            if (mealUri.IsFile)
+            {
+                string localMealsSource = mealUri.AbsolutePath;
+                xmlMealDataProvider.Document.Save(localMealsSource);
+            }
 
             var xmlStaplesDataProvider = (XmlDataProvider)this.FindResource("StaplesData");
-            string localStaplesSource = xmlStaplesDataProvider.Source.ToString();
-            xmlStaplesDataProvider.Document.Save(localStaplesSource);
+            Uri staplesUri = new Uri(xmlStaplesDataProvider.Source.ToString());
+            if (staplesUri.IsFile)
+            {
+                string staplesSource = staplesUri.AbsolutePath;
+                xmlStaplesDataProvider.Document.Save(staplesSource);
+            }
 
-            MessageBox.Show("Saved meals and staples", "Successful save", MessageBoxButton.OK, MessageBoxImage.Information);
+             MessageBox.Show("Saved meals and staples", "Successful save", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        public string AppDataPath
+        {
+            get { return Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData); }
         }
 
         #endregion
@@ -563,6 +607,5 @@ namespace SuperMarketPlanner
         }
 
         #endregion
-
     }
 }
