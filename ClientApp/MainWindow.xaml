@@ -62,7 +62,7 @@
             </Button>
         </ToolBar>
         <GridSplitter Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Width="4"/>
-        <DockPanel Grid.Column="0" Grid.Row="1">
+        <DockPanel Grid.Column="1" Grid.Row="1">
             <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="listTabControl">
                 <TabItem Header="Daily List" Name="dailyListTab">
                     <ScrollViewer>
@@ -88,7 +88,7 @@
                 </TabItem>
             </TabControl>
         </DockPanel>
-        <DockPanel Grid.Column="1" Grid.Row="1" >
+        <DockPanel Grid.Column="0" Grid.Row="1" >
             <TabControl  HorizontalAlignment="Stretch" Name="tabControl1" VerticalAlignment="Stretch" >
                 <TabItem Header="Meals" Name="tabItem1">
                     <Grid>
