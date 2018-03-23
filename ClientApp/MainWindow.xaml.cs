@@ -141,16 +141,16 @@ namespace SuperMarketPlanner
             }
         }
 
+        private void ShowPrintPreview()
+        {
+            System.Windows.Forms.PrintPreviewDialog printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog(); // instantiate new print preview dialog
+            printPreviewDialog1.Document = m_printDocument;
+            printPreviewDialog1.ShowDialog(); // Show the print preview dialog, uses print page event to draw preview screen
+        }
+
         private void printList(object sender, RoutedEventArgs e)
         {
-            publishMeals();
-
-            /*
-            System.Windows.Forms.PrintPreviewDialog printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog(); // instantiate new print preview dialog
-            printPreviewDialog1.Document = m_printDocument;        
-            printPreviewDialog1.ShowDialog(); // Show the print preview dialog, uses print page event to draw preview screen
-            */
-            // Configure printer dialog box
+             // Configure printer dialog box
             System.Windows.Controls.PrintDialog dlg = new System.Windows.Controls.PrintDialog();
             dlg.PageRangeSelection = PageRangeSelection.AllPages;
             dlg.UserPageRangeEnabled = true;
@@ -182,7 +182,7 @@ namespace SuperMarketPlanner
         }
 
         /// <summary>
-        /// Publish meal data
+        /// Publish meal data to server
         /// </summary>
         private async void publishMeals()
         {
@@ -247,11 +247,17 @@ namespace SuperMarketPlanner
                 if (!response.IsSuccessStatusCode)
                 {
                     var message = String.Format("Server returned HTTP error {0}: {1}.", (int)response.StatusCode, response.ReasonPhrase);
+                    MessageBox.Show(message, "Successful Sync", MessageBoxButton.OK, MessageBoxImage.Error);
                     throw new InvalidOperationException(message);
                 }
 
                 var data = await response.Content.ReadAsStringAsync();
 
+                if (data.Length > 0)
+                {
+                    MessageBox.Show("List sent to server", "Successful Sync", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                }
+ 
                 return data;
             }
         }
@@ -333,6 +339,11 @@ namespace SuperMarketPlanner
             }
 
              MessageBox.Show("Saved meals and staples", "Successful save", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void Sync_Click(object sender, RoutedEventArgs e)
+        {
+            publishMeals();
         }
 
         public string AppDataPath

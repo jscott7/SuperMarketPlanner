@@ -60,6 +60,9 @@
             <Button Click="printList">
                 <Image Source="ToolbarGraphics\printer.ico" ToolTip="Print List" />
             </Button>
+            <Button Click="Sync_Click">
+                <Image Source="ToolbarGraphics\printer.ico" ToolTip="Sync List" />
+            </Button>
         </ToolBar>
         <GridSplitter Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Width="4"/>
         <DockPanel Grid.Column="1" Grid.Row="1">
