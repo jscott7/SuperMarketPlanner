@@ -63,6 +63,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="FileParameter.cs" />
     <Compile Include="SelectedIngredient.cs" />
     <Compile Include="SelectedIngredientsCollection.cs" />
     <Compile Include="SelectedMeal.cs" />
@@ -132,6 +133,7 @@
     <Content Include="Data\SuperMarketDataStaples.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="ToolbarGraphics\Azure_blue_64x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

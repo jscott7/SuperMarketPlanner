@@ -18,10 +18,10 @@
         
         <DataTemplate x:Key="SelectedMealLayout">
             <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
-                <TextBlock Style="{StaticResource SelectedMealStyle}" Margin="2" Text="{Binding Date}"></TextBlock>
+                <TextBlock Style="{StaticResource SelectedMealStyle}" Margin="2" FontStyle="Italic" Text="{Binding Date}"></TextBlock>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Width="50"/>
-                    <TextBlock Style="{StaticResource SelectedMealStyle}" Margin="2" Text="{Binding Meal}"></TextBlock>
+                    <TextBlock Style="{StaticResource SelectedMealStyle}" Margin="1" Text="{Binding Path=Meal}"></TextBlock>
                 </StackPanel>
               </StackPanel>
         </DataTemplate>
@@ -61,7 +61,7 @@
                 <Image Source="ToolbarGraphics\printer.ico" ToolTip="Print List" />
             </Button>
             <Button Click="Sync_Click">
-                <Image Source="ToolbarGraphics\printer.ico" ToolTip="Sync List" />
+                <Image Source="ToolbarGraphics\Azure_blue_64x.png" ToolTip="Sync List" />
             </Button>
         </ToolBar>
         <GridSplitter Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Width="4"/>
