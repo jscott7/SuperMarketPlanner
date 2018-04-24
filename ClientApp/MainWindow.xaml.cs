@@ -289,7 +289,7 @@ namespace SuperMarketPlanner
 
             for (int unitIndex = 0; unitIndex < numberOfUnits; unitIndex++)
             {
-                var mealDate = new SelectedMeal { Date = date.ToString("dddd MMM dd"), Meal = "" };
+                var mealDate = new SelectedMeal { DateTime = date, Meal = "" };
                 colData.Add(mealDate);
                 date = date.AddDays(1);
             }
@@ -360,11 +360,25 @@ namespace SuperMarketPlanner
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ButtonClick_DeleteStaple(object sender, RoutedEventArgs e)
         {
             XmlNode obj = ((FrameworkElement)sender).DataContext as XmlNode;
             XmlNode parent = obj.ParentNode;
             parent.RemoveChild(obj);
+        }
+
+        private void ButtonClick_DeleteMeal(object sender, RoutedEventArgs e)
+        {
+            SelectedMeal selectedMeal = ((FrameworkElement)sender).DataContext as SelectedMeal;
+            SelectedIngredientsCollection ingredientData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
+
+            foreach( string ingredient in selectedMeal.Ingredients)
+            {
+                string date = selectedMeal.DateTime.ToString("yyyy-MM-dd");
+                ingredientData.Remove(new SelectedIngredient(ingredient, date));
+            }
+
+            selectedMeal.Clear();
         }
 
         private void ButtonClick_AddNewIngredient(object sender, RoutedEventArgs e)
@@ -583,13 +597,14 @@ namespace SuperMarketPlanner
                 string pattern = "dddd MMM dd";
                 foreach (SelectedMeal meal in colData)
                 {
-                    DateTime parsedDate = DateTime.Now;
-                    DateTime.TryParseExact(meal.Date, pattern, null, System.Globalization.DateTimeStyles.None, out parsedDate);
+
+                 //   DateTime parsedDate = DateTime.Now;
+                 //   DateTime.TryParseExact(meal.Date, pattern, null, System.Globalization.DateTimeStyles.None, out parsedDate);
 
                     if (meal.Ingredients == null) {continue;}
                     foreach (string ingredient in meal.Ingredients)
                     {                   
-                        SelectedIngredient selectedIngredient = new SelectedIngredient(ingredient, parsedDate.ToString("yyyy-MM-dd"));
+                        SelectedIngredient selectedIngredient = new SelectedIngredient(ingredient, meal.DateTime.ToString("yyyy-MM-dd"));
                         ingredientData.Add(selectedIngredient);
                     }
                 }

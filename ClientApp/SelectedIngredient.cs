@@ -37,6 +37,29 @@ namespace SuperMarketPlanner
             }
         }
 
+        public override bool Equals(object obj)
+        {
+            // Check for null values and compare run-time types.
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            SelectedIngredient otherIngredient = (SelectedIngredient)obj;
+            if ( otherIngredient.DateToUse == m_dateToUse && otherIngredient.m_ingredient == m_ingredient )
+            {
+                return true;
+            }
+
+            return false;
+
+        }
+
+        public override int GetHashCode()
+        {
+            return m_dateToUse.GetHashCode() + m_ingredient.GetHashCode();
+        }
+
         /// <summary>
         /// Parameterless constructor required for serialization
         /// </summary>

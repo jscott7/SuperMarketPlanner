@@ -8,9 +8,28 @@ namespace SuperMarketPlanner
 {
     public class SelectedMeal : INotifyPropertyChanged
     {
-        public string Date { get; set; }
+        private DateTime m_Date;
         private string m_Meal;
         private List<string> m_ingredients = new List<string>();
+
+        public DateTime DateTime
+        {
+            get
+            {
+                return m_Date;
+            }
+            set
+            {
+                m_Date = value;
+            }
+        }
+
+        public string Date
+        {
+            get {
+                return m_Date.ToString("dddd MMM dd");
+            }
+        }
 
         public string Meal
         {
@@ -24,6 +43,13 @@ namespace SuperMarketPlanner
                 m_Meal += value + "\r\n";
                 OnPropertyChanged(new PropertyChangedEventArgs("Meal"));
             }
+        }
+
+        public void Clear()
+        {
+            m_ingredients.Clear();
+            m_Meal = "";
+            OnPropertyChanged(new PropertyChangedEventArgs("Meal"));
         }
 
         public List<string> Ingredients
