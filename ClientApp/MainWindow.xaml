@@ -56,7 +56,7 @@
             <Button Click="newListClick">
                 <Image Source="ToolbarGraphics\Generic_Document.ico" ToolTip="New List" />
             </Button>
-            <Button>
+            <Button Click="Open_Click">
                 <Image Source="ToolbarGraphics\folder_open.ico" ToolTip="Open List" />
             </Button>
             <Button Click="Save_Click" >
