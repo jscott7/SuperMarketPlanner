@@ -42,12 +42,15 @@ namespace SuperMarketPlanner
 
         private PrintDocument m_printDocument = new PrintDocument();
 
+        private Persist m_persist;
+
         public MainWindow()
         {
             InitializeComponent();
 
             SetupXmlDataProviderSources();
-            m_printDocument.PrintPage += new PrintPageEventHandler(m_printDocument_PrintPage);                  
+            m_printDocument.PrintPage += new PrintPageEventHandler(m_printDocument_PrintPage);
+            m_persist = new Persist(/*TODO Supply Server Address*/);
         }
 
         private void SetupXmlDataProviderSources()
@@ -206,120 +209,19 @@ namespace SuperMarketPlanner
             xmlBuilder.AppendLine("</ShoppingList>");
 
             //http://www.briangrinstead.com/blog/multipart-form-post-in-c
-            await post(xmlBuilder.ToString());
+            await m_persist.Post(xmlBuilder.ToString(), startDate);
         }
 
-        private async Task<string> ServerGet( string request )
-        {
-            using (var client = new HttpClient())
-            {
-                var data = await client.GetStringAsync("http://192.168.0.202:8080/index");          
-                return data;
-            }      
-        }
-
-        /// <summary>
-        /// Post the xml string to the webservice on the Raspberry Pi
-        /// </summary>
-        /// <param name="payload"></param>
-        /// <returns></returns>
-        private async Task<string> post( string payload )
-        {          
-            using (var client = new HttpClient())
-            {
-                try
-                {
-                    // Key is date of start of list in yyyyMMdd format         
-                    var postData = new KeyValuePair<string, string>[]
-                    {
-                     new KeyValuePair<string, string>(startDate.ToString("yyyyMMdd"), payload)
-                    };
-
-                    var content = new FormUrlEncodedContent(postData);
-
-                    var response = await client.PostAsync("http://192.168.0.202:8080/index", content);
-
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        var message = String.Format("Server returned HTTP error {0}: {1}.", (int)response.StatusCode, response.ReasonPhrase);
-                        MessageBox.Show(message, "Successful Sync", MessageBoxButton.OK, MessageBoxImage.Error);
-                        throw new InvalidOperationException(message);
-                    }
-
-                    var data = await response.Content.ReadAsStringAsync();
-
-                    if (data.Length > 0)
-                    {
-                        MessageBox.Show("List sent to server", "Successful Sync", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-                    }
-
-                    return data;
-                }
-                catch(Exception ex)
-                {
-                    MessageBox.Show("Unable to send data to server: " + ex.Message , "Failed Sync", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return "";
-                }        
-            }
-        }
-
-        private async void LoadLatest()
-        {
-            string data = await ServerGet("");
-            SelectedMealCollection colData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
-            SelectedIngredientsCollection shoppingItemsData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
-
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(data);
-            XmlNodeList meals = xmlDoc.SelectNodes("//ArrayOfSelectedMeal/SelectedMeal");
-            foreach(XmlNode xmlNode in meals)
-            {                     
-                //<ArrayOfSelectedMeal>
-                // Now populate meals and staples
-
-                string meal = xmlNode.SelectSingleNode("Meal").InnerText;
-                string date = xmlNode.SelectSingleNode("DateTime").InnerText;
-                XmlNodeList ingredients = xmlNode.SelectNodes("Ingredients/string");
-                SelectedMeal selectedMeal = new SelectedMeal();
-
-                // Datetime conversion
-                DateTime mealDate;
-                if (DateTime.TryParse( date, out mealDate ))
-                {
-                    selectedMeal.DateTime = mealDate;
-                }
-
-                selectedMeal.Meal = meal;
-
-                foreach (XmlNode ingredientNode in ingredients)
-                {
-                    selectedMeal.Ingredients.Add(ingredientNode.InnerText);
-                }
-
-                colData.Add(selectedMeal);             
-            }
-
-            //<ArrayOfSelectedIngredient>
-            XmlNodeList selectedIngredients = xmlDoc.SelectNodes("//ArrayOfSelectedIngredient/SelectedIngredient");
-            foreach (XmlNode xmlNode in selectedIngredients)
-            {
-                string ingredient = xmlNode.SelectSingleNode("Ingredient").InnerText;
-                string date = xmlNode.SelectSingleNode("DateToUse").InnerText;
-
-                SelectedIngredient selectedIngredient = new SelectedIngredient();
-                selectedIngredient.Ingredient = ingredient;
-                selectedIngredient.DateToUse = date;
-                shoppingItemsData.Add(selectedIngredient);
-            }
-           
-        }
         #endregion
 
         #region ToolBar handlers
 
         private void Open_Click(object sender, RoutedEventArgs e)
         {
-            LoadLatest();    
+            var mealData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
+            var ingredientsData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
+
+            m_persist.LoadLatest(mealData, ingredientsData);    
         }
 
         private void newListClick(object sender, RoutedEventArgs e)
