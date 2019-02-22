@@ -14,7 +14,7 @@ namespace SuperMarketPlanner
      */
     class Persist
     {
-        public async void LoadLatest( SelectedMealCollection mealData, SelectedIngredientsCollection ingredientsData)
+        public async void LoadLatest(SelectedMealCollection mealData, SelectedIngredientsCollection ingredientsData)
         {
             try
             {
@@ -26,11 +26,10 @@ namespace SuperMarketPlanner
                 foreach (XmlNode xmlNode in meals)
                 {
                     //<ArrayOfSelectedMeal>
-                    // Now populate meals and staples
-
-                    string meal = xmlNode.SelectSingleNode("Meal").InnerText;
+                    // Now populate meals and staples              
                     string date = xmlNode.SelectSingleNode("DateTime").InnerText;
-                    XmlNodeList ingredients = xmlNode.SelectNodes("Ingredients/string");
+                    var ingredients = xmlNode.SelectNodes("Ingredients/string");
+                    var mealsForDate = xmlNode.SelectNodes("Meals/string");
                     SelectedMeal selectedMeal = new SelectedMeal();
 
                     // Datetime conversion
@@ -40,7 +39,10 @@ namespace SuperMarketPlanner
                         selectedMeal.DateTime = mealDate;
                     }
 
-                    selectedMeal.Meal = meal;
+                    foreach(XmlNode mealNode in mealsForDate)
+                    {
+                        selectedMeal.addMeal(mealNode.InnerText);
+                    }
 
                     foreach (XmlNode ingredientNode in ingredients)
                     {

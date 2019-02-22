@@ -26,7 +26,7 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Width="50"/>
-                    <TextBlock Style="{StaticResource SelectedMealStyle}" Margin="1" Text="{Binding Path=Meal}"></TextBlock>
+                    <TextBlock Style="{StaticResource SelectedMealStyle}" Margin="1" Text="{Binding Path=MealsString}"></TextBlock>
                 </StackPanel>
             </StackPanel>
         </DataTemplate>

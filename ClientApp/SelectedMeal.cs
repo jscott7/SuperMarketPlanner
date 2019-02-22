@@ -9,7 +9,7 @@ namespace SuperMarketPlanner
     public class SelectedMeal : INotifyPropertyChanged
     {
         private DateTime m_Date;
-        private string m_Meal;
+        private List<string> m_Meals = new List<string>();
         private List<string> m_ingredients = new List<string>();
 
         public DateTime DateTime
@@ -31,25 +31,35 @@ namespace SuperMarketPlanner
             }
         }
 
-        public string Meal
+        public List<string> Meals
         {
             get
             {
-                return m_Meal;
+                return m_Meals;
             }
             set
             {
-                // Each meal gets added to the date as a new line
-                m_Meal += value + "\r\n";
-                OnPropertyChanged(new PropertyChangedEventArgs("Meal"));
+                m_Meals.AddRange(value);
+                // When we update we want to notifiy the UI to update the MealsString binding
+                OnPropertyChanged(new PropertyChangedEventArgs("MealsString"));
             }
         }
 
-        public void Clear()
+        /// <summary>
+        /// For display, binding to the textblock, concatenate the list with newlines
+        /// </summary>
+        public string MealsString
         {
-            m_ingredients.Clear();
-            m_Meal = "";
-            OnPropertyChanged(new PropertyChangedEventArgs("Meal"));
+            get
+            {
+                return string.Join("\r\n", m_Meals);
+            }
+        }
+
+        public void addMeal(string meal)
+        {
+            m_Meals.Add(meal);
+            OnPropertyChanged(new PropertyChangedEventArgs("MealsString"));
         }
 
         public List<string> Ingredients
@@ -62,6 +72,13 @@ namespace SuperMarketPlanner
             {
                 m_ingredients.AddRange(value);
             }
+        }
+
+        public void Clear()
+        {
+            m_ingredients.Clear();
+            m_Meals.Clear();
+            OnPropertyChanged(new PropertyChangedEventArgs("MealsString"));
         }
 
         // INotifyPropertyChanged is used to allow the ObservableCollection to be upated when we update a property

@@ -110,7 +110,11 @@ namespace SuperMarketPlanner
                 lineCount++;
    
                 yPos = topMargin + (count++ * printFont.GetHeight(e.Graphics));
-                e.Graphics.DrawString(selectedMeal.Meal, printFont, myBrush, xPos + 20, yPos);
+
+                foreach (string meal in selectedMeal.Meals)
+                {
+                    e.Graphics.DrawString(meal, printFont, myBrush, xPos + 20, yPos);
+                }
 
                 lineCount++;
 
@@ -262,7 +266,7 @@ namespace SuperMarketPlanner
 
             for (int unitIndex = 0; unitIndex < numberOfUnits; unitIndex++)
             {
-                var mealDate = new SelectedMeal { DateTime = date, Meal = "" };
+                var mealDate = new SelectedMeal { DateTime = date };
                 colData.Add(mealDate);
                 date = date.AddDays(1);
             }
@@ -551,7 +555,7 @@ namespace SuperMarketPlanner
                 XmlElement xElement = e.Data.GetData("dragMealFormat") as XmlElement;
                 SelectedMealCollection colData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
                 SelectedMeal mealToUpdate = colData[updateIndex];
-                mealToUpdate.Meal = xElement.GetAttribute("name");
+                mealToUpdate.addMeal(xElement.GetAttribute("name"));
 
                 if (mealToUpdate.Ingredients == null)
                 {
