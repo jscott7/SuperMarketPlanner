@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml;
 
 namespace SuperMarketPlanner
 {
-    /*
-     * Class to handle interaction between the UI and Rest Server
-     */
+    /// <summary>
+    /// Class to handle interaction between the UI and Rest Server
+    /// </summary>
     class Persist
     {
         public async void LoadLatest(SelectedMealCollection mealData, SelectedIngredientsCollection ingredientsData)
@@ -25,12 +23,12 @@ namespace SuperMarketPlanner
                 XmlNodeList meals = xmlDoc.SelectNodes("//ArrayOfSelectedMeal/SelectedMeal");
                 foreach (XmlNode xmlNode in meals)
                 {
-                    //<ArrayOfSelectedMeal>
+                    // <ArrayOfSelectedMeal>
                     // Now populate meals and staples              
                     string date = xmlNode.SelectSingleNode("DateTime").InnerText;
                     var ingredients = xmlNode.SelectNodes("Ingredients/string");
                     var mealsForDate = xmlNode.SelectNodes("Meals/string");
-                    SelectedMeal selectedMeal = new SelectedMeal();
+                    var selectedMeal = new SelectedMeal();
 
                     // Datetime conversion
                     DateTime mealDate;
@@ -53,13 +51,13 @@ namespace SuperMarketPlanner
                 }
 
                 //<ArrayOfSelectedIngredient>
-                XmlNodeList selectedIngredients = xmlDoc.SelectNodes("//ArrayOfSelectedIngredient/SelectedIngredient");
+                var selectedIngredients = xmlDoc.SelectNodes("//ArrayOfSelectedIngredient/SelectedIngredient");
                 foreach (XmlNode xmlNode in selectedIngredients)
                 {
                     string ingredient = xmlNode.SelectSingleNode("Ingredient").InnerText;
                     string date = xmlNode.SelectSingleNode("DateToUse").InnerText;
 
-                    SelectedIngredient selectedIngredient = new SelectedIngredient();
+                    var selectedIngredient = new SelectedIngredient();
                     selectedIngredient.Ingredient = ingredient;
                     selectedIngredient.DateToUse = date;
                     ingredientsData.Add(selectedIngredient);
@@ -69,7 +67,6 @@ namespace SuperMarketPlanner
             {
                 MessageBox.Show("Unable to load data from server: " + ex, "Failed Load", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
         }
 
         /// <summary>

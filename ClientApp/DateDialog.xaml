@@ -1,7 +1,7 @@
 ﻿<Window x:Class="SuperMarketPlanner.DateDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="DateDialog" Height="261" Width="300" ResizeMode="NoResize" WindowStyle="ToolWindow">
+        Title="Create New List" Height="261" Width="300" ResizeMode="NoResize" WindowStyle="ToolWindow">
     <StackPanel Orientation="Vertical" Height="220">
         <Calendar Name="calendar" Height="170" Width="180" />
         <StackPanel Orientation="Horizontal">

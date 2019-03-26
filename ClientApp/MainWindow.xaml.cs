@@ -56,8 +56,8 @@ namespace SuperMarketPlanner
         private void SetupXmlDataProviderSources()
         {
             // We need to set the XmlDataProvider to be in the appData folder
-            XmlDataProvider mealsXmlDataProvider = FindResource("MealData") as XmlDataProvider;
-            XmlDataProvider staplesXmlDataProvider = FindResource("StaplesData") as XmlDataProvider;
+            var mealsXmlDataProvider = FindResource("MealData") as XmlDataProvider;
+            var staplesXmlDataProvider = FindResource("StaplesData") as XmlDataProvider;
 
             string mealsPath = AppDataPath + "\\SuperMarketPlanner\\SuperMarketDataMeals.xml";
             string staplesPath = AppDataPath + "\\SuperMarketPlanner\\SuperMarketDataStaples.xml";
@@ -150,7 +150,7 @@ namespace SuperMarketPlanner
 
         private void ShowPrintPreview()
         {
-            System.Windows.Forms.PrintPreviewDialog printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog(); // instantiate new print preview dialog
+            var printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog(); // instantiate new print preview dialog
             printPreviewDialog1.Document = m_printDocument;
             printPreviewDialog1.ShowDialog(); // Show the print preview dialog, uses print page event to draw preview screen
         }
@@ -228,7 +228,7 @@ namespace SuperMarketPlanner
             m_persist.LoadLatest(mealData, ingredientsData);    
         }
 
-        private void newListClick(object sender, RoutedEventArgs e)
+        private void NewList_Click(object sender, RoutedEventArgs e)
         {
             // Instantiate the dialog box
             DateDialog dlg = new DateDialog();
@@ -367,7 +367,7 @@ namespace SuperMarketPlanner
             var newElement = xmlDataProvider.Document.CreateElement("Ingredient");
 
             // We can't change the Items collection directly, so we need to find the parent XmlNode and append the child to that
-            XmlNode parent = ((XmlElement)x.Items[0]).ParentNode;
+            var parent = ((XmlElement)x.Items[0]).ParentNode;
             parent.AppendChild(newElement);
         }
 
@@ -375,13 +375,36 @@ namespace SuperMarketPlanner
         {
             var xmlDataProvider = (XmlDataProvider)this.FindResource("StaplesData");
             var newElement = xmlDataProvider.Document.CreateElement("Staple");
-            XmlAttribute attribute = xmlDataProvider.Document.CreateAttribute("name");
+            var attribute = xmlDataProvider.Document.CreateAttribute("name");
             newElement.Attributes.Append(attribute);
 
             // We can't change the Items collection directly, so we need to find the parent XmlNode and append the child to that
             xmlDataProvider.Document.SelectSingleNode("//Staples").AppendChild(newElement);
         }
 
+        private void ButtonClick_AddNewMeal(object sender, RoutedEventArgs e)
+        {
+            var newMealDialog = new NewMealDialog();
+            if (newMealDialog.ShowDialog() == true)
+            {
+                var newMeal = newMealDialog.NewMeal;
+                var xmlDataProvider = (XmlDataProvider)this.FindResource("MealData");
+
+                var newMealElement = xmlDataProvider.Document.CreateElement("Meal");
+                var ingredientsElement = xmlDataProvider.Document.CreateElement("Ingredients");        
+                var ingredientElement = xmlDataProvider.Document.CreateElement("Ingredient");
+                ingredientsElement.AppendChild(ingredientElement);
+                newMealElement.AppendChild(ingredientsElement);
+
+                var  nameAttribute = xmlDataProvider.Document.CreateAttribute("name");
+                nameAttribute.Value = newMeal;
+                newMealElement.Attributes.Append(nameAttribute);
+
+                // TODO : Factor this out, it's used 3 times
+                XmlNode parent = ((XmlElement)mealGrid.Items[0]).ParentNode;
+                parent.AppendChild(newMealElement);
+            }
+        }
         #endregion
 
         #region Drag Drop code
@@ -571,13 +594,8 @@ namespace SuperMarketPlanner
                 SelectedIngredientsCollection ingredientData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
                 ingredientData.Clear();
 
-               // string pattern = "dddd MMM dd";
                 foreach (SelectedMeal meal in colData)
                 {
-
-                 //   DateTime parsedDate = DateTime.Now;
-                 //   DateTime.TryParseExact(meal.Date, pattern, null, System.Globalization.DateTimeStyles.None, out parsedDate);
-
                     if (meal.Ingredients == null) {continue;}
                     foreach (string ingredient in meal.Ingredients)
                     {                   

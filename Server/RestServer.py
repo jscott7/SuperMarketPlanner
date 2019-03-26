@@ -5,8 +5,18 @@ import glob
 import os
 
 urls = (
-	'/index', 'index'
+	'/index', 'index',
+        '/meals', 'meals'
 )
+
+#Global dictionay of common items
+t_globals = dict(datestr = web.datestr,)
+
+# The rendering engine for html templates
+render = web.template.render('/home/pi/templates', globals=t_globals)
+
+# Add the engine to globals so it can reference itself
+render._keywords['globals']['render'] = render
 
 class index:
     def GET(self):
@@ -46,6 +56,13 @@ class index:
         fout.write(urllib.unquote_plus(cleaned))
         fout.close()
         return x
+
+class meals:
+    def GET(self):
+        
+        meals = ['meal1', 'meal2', 'meal3']
+        # Show page
+        return render.base(render.listing(meals))
 
 if __name__ == "__main__":
     app = web.application(urls, globals())

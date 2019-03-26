@@ -1,0 +1,2 @@
+pi@raspberrypi:~/Server $ docker run -d --restart always -p 8080:8080 rest-server 
+

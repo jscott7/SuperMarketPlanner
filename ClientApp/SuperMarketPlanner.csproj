@@ -100,6 +100,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="NewMealDialog.xaml.cs">
+      <DependentUpon>NewMealDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FileParameter.cs" />
     <Compile Include="Persist.cs" />
     <Compile Include="SelectedIngredient.cs" />
@@ -107,6 +110,10 @@
     <Compile Include="SelectedMeal.cs" />
     <Compile Include="SelectedMealCollection.cs" />
     <Compile Include="UnitsEnum.cs" />
+    <Page Include="NewMealDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="DateDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
