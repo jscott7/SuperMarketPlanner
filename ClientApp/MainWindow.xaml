@@ -120,7 +120,12 @@
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Vertical">
-                                                    <TextBlock HorizontalAlignment="Center" Text="{Binding XPath=@name}" FontSize="16" FontFamily="Tahoma" />
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Button Width="20" Click="ButtonClick_DeleteMealFromSourceList">
+                                                            <Image Source="/SuperMarketPlanner;component/Images/noresults_uncompressed.ico"></Image>
+                                                        </Button>
+                                                        <TextBlock HorizontalAlignment="Center" Text="{Binding XPath=@name}" FontSize="16" FontFamily="Tahoma" />
+                                                    </StackPanel>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>

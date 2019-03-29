@@ -358,17 +358,27 @@ namespace SuperMarketPlanner
             selectedMeal.Clear();
         }
 
+        /// <summary>
+        /// Handler for removing a meal from the main source list
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ButtonClick_DeleteMealFromSourceList(object sender, RoutedEventArgs e)
+        {
+            var item = ((FrameworkElement)sender).DataContext as XmlNode;
+            XmlNode parent = ((XmlElement)mealGrid.Items[0]).ParentNode;
+            parent.RemoveChild(item);
+        }
+
         private void ButtonClick_AddNewIngredient(object sender, RoutedEventArgs e)
         {
             //TODO: Robust checks
             StackPanel obj = ((FrameworkElement)sender).Parent as StackPanel;
-            var x = (DataGrid)obj.Children[0];
+            var ingredientGrid = (DataGrid)obj.Children[0];
             var xmlDataProvider = (XmlDataProvider)this.FindResource("MealData");
             var newElement = xmlDataProvider.Document.CreateElement("Ingredient");
 
-            // We can't change the Items collection directly, so we need to find the parent XmlNode and append the child to that
-            var parent = ((XmlElement)x.Items[0]).ParentNode;
-            parent.AppendChild(newElement);
+            AppendChildToDataGrid(ingredientGrid, newElement);
         }
 
         private void ButtonClick_AddNewStaple(object sender, RoutedEventArgs e)
@@ -395,16 +405,29 @@ namespace SuperMarketPlanner
                 var ingredientElement = xmlDataProvider.Document.CreateElement("Ingredient");
                 ingredientsElement.AppendChild(ingredientElement);
                 newMealElement.AppendChild(ingredientsElement);
-
+ 
                 var  nameAttribute = xmlDataProvider.Document.CreateAttribute("name");
                 nameAttribute.Value = newMeal;
                 newMealElement.Attributes.Append(nameAttribute);
 
-                // TODO : Factor this out, it's used 3 times
-                XmlNode parent = ((XmlElement)mealGrid.Items[0]).ParentNode;
-                parent.AppendChild(newMealElement);
+                AppendChildToDataGrid(mealGrid, newMealElement);
             }
         }
+
+        /// <summary>
+        ///  We can't change the Items collection directly on a DataGrid, so we need to find the parent XmlNode and append the xmlnode to that
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <param name="newElement"></param>
+        private void AppendChildToDataGrid(DataGrid grid, XmlNode newElement)
+        {
+            if (!grid.Items.IsEmpty)
+            {
+                var parent = ((XmlElement)grid.Items[0]).ParentNode;
+                parent.AppendChild(newElement);
+            }
+        }
+
         #endregion
 
         #region Drag Drop code
@@ -609,5 +632,10 @@ namespace SuperMarketPlanner
         }
 
         #endregion
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
