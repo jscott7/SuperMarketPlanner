@@ -10,6 +10,7 @@ namespace SuperMarketPlanner
     {
         private string m_ingredient;
         private string m_dateToUse;
+        private bool m_purchased = false;
 
         public string Ingredient
         {
@@ -34,6 +35,19 @@ namespace SuperMarketPlanner
             {
                 m_dateToUse = value;
                 OnPropertyChanged(new PropertyChangedEventArgs("DateToUse"));
+            }
+        }
+
+        public bool IsPurchased
+        {
+            get
+            {
+                return m_purchased;
+            }
+            set
+            {
+                m_purchased = value;
+                OnPropertyChanged(new PropertyChangedEventArgs("IsPurchased"));
             }
         }
 
@@ -76,10 +90,13 @@ namespace SuperMarketPlanner
        
         public void OnPropertyChanged(PropertyChangedEventArgs e)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, e);
-            }
+            PropertyChanged?.Invoke(this, e);
+
+            //Replaces the following code
+         //   if (PropertyChanged != null)
+         //   {
+         //       PropertyChanged(this, e);
+         //   }
         }
     }
 }

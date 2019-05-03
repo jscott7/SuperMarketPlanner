@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing.Printing;
 using System.IO;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -186,8 +184,10 @@ namespace SuperMarketPlanner
             var settings = new XmlWriterSettings();
 
             settings.OmitXmlDeclaration = true;
-
-            xmlBuilder.AppendLine("<ShoppingList>");
+        
+            xmlBuilder.Append("<ShoppingList update=\"")
+                .Append(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))
+                .AppendLine("\">");
 
             using (StringWriter stream = new StringWriter())
             {
@@ -346,8 +346,8 @@ namespace SuperMarketPlanner
 
         private void ButtonClick_DeleteMeal(object sender, RoutedEventArgs e)
         {
-            SelectedMeal selectedMeal = ((FrameworkElement)sender).DataContext as SelectedMeal;
-            SelectedIngredientsCollection ingredientData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
+            var selectedMeal = ((FrameworkElement)sender).DataContext as SelectedMeal;
+            var ingredientData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
 
             foreach( string ingredient in selectedMeal.Ingredients)
             {
@@ -373,7 +373,7 @@ namespace SuperMarketPlanner
         private void ButtonClick_AddNewIngredient(object sender, RoutedEventArgs e)
         {
             //TODO: Robust checks
-            StackPanel obj = ((FrameworkElement)sender).Parent as StackPanel;
+            var obj = ((FrameworkElement)sender).Parent as StackPanel;
             var ingredientGrid = (DataGrid)obj.Children[0];
             var xmlDataProvider = (XmlDataProvider)this.FindResource("MealData");
             var newElement = xmlDataProvider.Document.CreateElement("Ingredient");
@@ -580,10 +580,10 @@ namespace SuperMarketPlanner
         {
             if (e.Data.GetDataPresent("dragStapleFormat"))
             {
-                SelectedIngredientsCollection ingredientData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
+                var ingredientData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
                 var stapleElement = e.Data.GetData("dragStapleFormat") as XmlElement;
-                String stapleName = stapleElement.Attributes.GetNamedItem("name").Value;
-                SelectedIngredient staple = new SelectedIngredient(stapleName, "");
+                string stapleName = stapleElement.Attributes.GetNamedItem("name").Value;
+                var staple = new SelectedIngredient(stapleName, "");
                 ingredientData.Add(staple);
             }
         }
@@ -598,9 +598,10 @@ namespace SuperMarketPlanner
                 // sender is itemsControl 
                 // Update the table data
                 int updateIndex = DecideDropTarget(e, (ItemsControl)sender);
-                XmlElement xElement = e.Data.GetData("dragMealFormat") as XmlElement;
-                SelectedMealCollection colData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
-                SelectedMeal mealToUpdate = colData[updateIndex];
+                var xElement = e.Data.GetData("dragMealFormat") as XmlElement;
+                var colData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
+                var mealToUpdate = colData[updateIndex];
+
                 mealToUpdate.addMeal(xElement.GetAttribute("name"));
 
                 if (mealToUpdate.Ingredients == null)
@@ -614,7 +615,7 @@ namespace SuperMarketPlanner
                 }
 
                 // Refresh the selected ingredient view
-                SelectedIngredientsCollection ingredientData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
+                var ingredientData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
                 ingredientData.Clear();
 
                 foreach (SelectedMeal meal in colData)
@@ -622,7 +623,7 @@ namespace SuperMarketPlanner
                     if (meal.Ingredients == null) {continue;}
                     foreach (string ingredient in meal.Ingredients)
                     {                   
-                        SelectedIngredient selectedIngredient = new SelectedIngredient(ingredient, meal.DateTime.ToString("yyyy-MM-dd"));
+                        var selectedIngredient = new SelectedIngredient(ingredient, meal.DateTime.ToString("yyyy-MM-dd"));
                         ingredientData.Add(selectedIngredient);
                     }
                 }
@@ -632,10 +633,5 @@ namespace SuperMarketPlanner
         }
 
         #endregion
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
