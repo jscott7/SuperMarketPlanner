@@ -1,4 +1,9 @@
 $def with (item)
 
-<p>$item</p>
-<p>Placeholder</p>
+<p>
+$if item[0].isdigit():
+   <b>$item</b>
+$else:
+   $item
+</p>
+

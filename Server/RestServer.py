@@ -4,6 +4,8 @@ import web, urllib
 import glob
 import os
 
+import xml.etree.ElementTree as ET
+
 urls = (
 	'/index', 'index',
         '/meals', 'meals'
@@ -18,10 +20,12 @@ render = web.template.render('/home/pi/templates', globals=t_globals)
 # Add the engine to globals so it can reference itself
 render._keywords['globals']['render'] = render
 
+filedir = '/home/pi/data'
+
+
 class index:
     def GET(self):
         x = web.input(date="latest")
-        filedir = '/home/pi/data'
         filename = filedir
 
         if x.date == 'latest':
@@ -60,7 +64,22 @@ class index:
 class meals:
     def GET(self):
         
-        meals = ['meal1', 'meal2', 'meal3']
+        list_of_files = glob.glob( filedir + '/*' )
+        latest_file = max(list_of_files, key=os.path.getctime)
+
+        tree = ET.parse(latest_file)
+        root = tree.getroot()
+
+        meals = []
+
+        for subelem in root.findall('ArrayOfSelectedMeal/SelectedMeal'):
+           # Do something with date here
+           date = subelem.find('DateTime')
+           meals.append(date.text)
+
+           for mealelem in subelem.findall('Meals/string'):
+              meals.append(mealelem.text)
+        #meals = ['meal1', 'meal2', 'meal3']
         # Show page
         return render.base(render.listing(meals))
 
