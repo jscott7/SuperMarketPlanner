@@ -12,15 +12,19 @@ namespace SuperMarketPlanner
     /// </summary>
     class Persist
     {
-        public async void LoadLatest(SelectedMealCollection mealData, SelectedIngredientsCollection ingredientsData)
+        public async Task<DateTime> LoadLatest(SelectedMealCollection mealData, SelectedIngredientsCollection ingredientsData)
         {
+            DateTime startDate = DateTime.MinValue;
+
             try
             {
                 string data = await ServerGet("");
 
-                XmlDocument xmlDoc = new XmlDocument();
+                var xmlDoc = new XmlDocument();
                 xmlDoc.LoadXml(data);
-                XmlNodeList meals = xmlDoc.SelectNodes("//ArrayOfSelectedMeal/SelectedMeal");
+                var meals = xmlDoc.SelectNodes("//ArrayOfSelectedMeal/SelectedMeal");
+
+                mealData.Clear();
                 foreach (XmlNode xmlNode in meals)
                 {
                     // <ArrayOfSelectedMeal>
@@ -35,6 +39,10 @@ namespace SuperMarketPlanner
                     if (DateTime.TryParse(date, out mealDate))
                     {
                         selectedMeal.DateTime = mealDate;
+                        if (startDate == DateTime.MinValue || mealDate < startDate)
+                        {
+                            startDate = mealDate;
+                        }
                     }
 
                     foreach(XmlNode mealNode in mealsForDate)
@@ -50,8 +58,10 @@ namespace SuperMarketPlanner
                     mealData.Add(selectedMeal);
                 }
 
-                //<ArrayOfSelectedIngredient>
+                //<ArrayOfSelectedIngredient>           
                 var selectedIngredients = xmlDoc.SelectNodes("//ArrayOfSelectedIngredient/SelectedIngredient");
+
+                ingredientsData.Clear();
                 foreach (XmlNode xmlNode in selectedIngredients)
                 {
                     string ingredient = xmlNode.SelectSingleNode("Ingredient").InnerText;
@@ -67,6 +77,8 @@ namespace SuperMarketPlanner
             {
                 MessageBox.Show("Unable to load data from server: " + ex, "Failed Load", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+            return startDate;
         }
 
         /// <summary>

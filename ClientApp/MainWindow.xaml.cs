@@ -220,12 +220,12 @@ namespace SuperMarketPlanner
 
         #region ToolBar handlers
 
-        private void Open_Click(object sender, RoutedEventArgs e)
+        private async void Open_Click(object sender, RoutedEventArgs e)
         {
             var mealData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
             var ingredientsData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
 
-            m_persist.LoadLatest(mealData, ingredientsData);    
+            startDate = await m_persist.LoadLatest(mealData, ingredientsData);    
         }
 
         private void NewList_Click(object sender, RoutedEventArgs e)
