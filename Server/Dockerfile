@@ -11,7 +11,8 @@ WORKDIR /app
 
 COPY RestServer.py /app
 
-COPY data /home/pi/data/ 
+# I want to setup a data volume instead of copying to the image
+# COPY data /home/pi/data/ 
 
 COPY templates /home/pi/templates
 
