@@ -8,19 +8,19 @@ namespace SuperMarketPlanner
 {
     public class SelectedIngredient : INotifyPropertyChanged
     {
-        private string m_ingredient;
-        private string m_dateToUse;
-        private bool m_purchased = false;
+        private string _ingredient;
+        private string _dateToUse;
+        private bool _purchased = false;
 
         public string Ingredient
         {
             get
             {
-                return m_ingredient;
+                return _ingredient;
             }
             set
             {
-                m_ingredient = value;
+                _ingredient = value;
                 OnPropertyChanged(new PropertyChangedEventArgs("Ingredient"));
             }
         }
@@ -29,11 +29,11 @@ namespace SuperMarketPlanner
         {
             get
             {
-                return m_dateToUse;      
+                return _dateToUse;      
             }
             set
             {
-                m_dateToUse = value;
+                _dateToUse = value;
                 OnPropertyChanged(new PropertyChangedEventArgs("DateToUse"));
             }
         }
@@ -42,11 +42,11 @@ namespace SuperMarketPlanner
         {
             get
             {
-                return m_purchased;
+                return _purchased;
             }
             set
             {
-                m_purchased = value;
+                _purchased = value;
                 OnPropertyChanged(new PropertyChangedEventArgs("IsPurchased"));
             }
         }
@@ -60,7 +60,7 @@ namespace SuperMarketPlanner
             }
 
             SelectedIngredient otherIngredient = (SelectedIngredient)obj;
-            if ( otherIngredient.DateToUse == m_dateToUse && otherIngredient.m_ingredient == m_ingredient )
+            if ( otherIngredient.DateToUse == _dateToUse && otherIngredient._ingredient == _ingredient )
             {
                 return true;
             }
@@ -71,7 +71,7 @@ namespace SuperMarketPlanner
 
         public override int GetHashCode()
         {
-            return m_dateToUse.GetHashCode() + m_ingredient.GetHashCode();
+            return _dateToUse.GetHashCode() + _ingredient.GetHashCode();
         }
 
         /// <summary>
@@ -82,8 +82,8 @@ namespace SuperMarketPlanner
 
         public SelectedIngredient(string ingredient, string dateToUse)
         {
-            m_ingredient = ingredient;
-            m_dateToUse = dateToUse;
+            _ingredient = ingredient;
+            _dateToUse = dateToUse;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

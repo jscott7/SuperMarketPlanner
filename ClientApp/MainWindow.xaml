@@ -62,7 +62,7 @@
             <Button Click="Save_Click" >
                 <Image Source="ToolbarGraphics\FloppyDisk.ico" ToolTip="Save List" />
             </Button>
-            <Button Click="printList">
+            <Button Click="PrintList">
                 <Image Source="ToolbarGraphics\printer.ico" ToolTip="Print List" />
             </Button>
             <Button Click="Sync_Click">
@@ -80,7 +80,7 @@
                             </StackPanel>
                             <StackPanel>
                                 <ItemsControl Name="dateItems" HorizontalAlignment="Left"
-    ItemsSource="{Binding Source={StaticResource SelectedMealCollectionData}}" ItemTemplate="{StaticResource SelectedMealLayout}" AllowDrop="True" DragEnter="list_DragEnter" Drop="list_DragDrop">
+    ItemsSource="{Binding Source={StaticResource SelectedMealCollectionData}}" ItemTemplate="{StaticResource SelectedMealLayout}" AllowDrop="True" DragEnter="List_DragEnter" Drop="List_DragDrop">
                                 </ItemsControl>
                             </StackPanel>
                         </StackPanel>
@@ -90,7 +90,7 @@
                     <ScrollViewer>
                         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
                             <ItemsControl Name="selectedIngredients" HorizontalAlignment="Left" ItemsSource="{Binding Source={StaticResource SelectedIngredientsCollectionData}}"
-                                          ItemTemplate="{StaticResource SelectedIngredientsLayout}" AllowDrop="True" DragEnter="allItems_DragEnter" Drop="allItems_DragDrop"></ItemsControl>
+                                          ItemTemplate="{StaticResource SelectedIngredientsLayout}" AllowDrop="True" DragEnter="AllItems_DragEnter" Drop="AllItems_DragDrop"></ItemsControl>
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
@@ -109,10 +109,10 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="20px"/>
                             </Grid.RowDefinitions>
-                            <DataGrid Name="mealGrid" RowDetailsVisibilityMode="Collapsed" AllowDrop="True" Background="White" GridLinesVisibility="None" DataContext="{StaticResource MealData}" ItemsSource="{Binding}" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" SelectionUnit="FullRow" SelectionMode="Single" PreviewMouseLeftButtonDown="mealGrid_PreviewMouseLeftButtonDown" MouseMove="mealGrid_MouseMove" CanUserAddRows="True"  Grid.Row="0" Grid.ColumnSpan="2">
+                            <DataGrid Name="mealGrid" RowDetailsVisibilityMode="Collapsed" AllowDrop="True" Background="White" GridLinesVisibility="None" DataContext="{StaticResource MealData}" ItemsSource="{Binding}" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" SelectionUnit="FullRow" SelectionMode="Single" PreviewMouseLeftButtonDown="MealGrid_PreviewMouseLeftButtonDown" MouseMove="MealGrid_MouseMove" CanUserAddRows="True"  Grid.Row="0" Grid.ColumnSpan="2">
                                 <DataGrid.RowStyle>
                                     <Style TargetType="{x:Type DataGridRow}">
-                                        <EventSetter Event="MouseDoubleClick" Handler="mealGrid_RowDoubleClick"/>
+                                        <EventSetter Event="MouseDoubleClick" Handler="MealGrid_RowDoubleClick"/>
                                     </Style>
                                 </DataGrid.RowStyle>
                                 <DataGrid.Columns>
@@ -156,7 +156,7 @@
                                 <RowDefinition/>
                                 <RowDefinition Height="20"/>
                             </Grid.RowDefinitions>
-                            <DataGrid Grid.Row="0" Name="staplesGrid" AllowDrop="True" Background="White" GridLinesVisibility="None" DataContext="{StaticResource StaplesData}" ItemsSource="{Binding}" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserSortColumns="True" CanUserResizeColumns="False" CanUserResizeRows="False" SelectionUnit="FullRow" SelectionMode="Single" PreviewMouseLeftButtonDown="staplesGrid_PreviewMouseLeftButtonDown" MouseMove="staplesGrid_MouseMove" CanUserAddRows="True">
+                            <DataGrid Grid.Row="0" Name="staplesGrid" AllowDrop="True" Background="White" GridLinesVisibility="None" DataContext="{StaticResource StaplesData}" ItemsSource="{Binding}" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserSortColumns="True" CanUserResizeColumns="False" CanUserResizeRows="False" SelectionUnit="FullRow" SelectionMode="Single" PreviewMouseLeftButtonDown="StaplesGrid_PreviewMouseLeftButtonDown" MouseMove="StaplesGrid_MouseMove" CanUserAddRows="True">
                                 <DataGrid.Columns>
                                     <DataGridTemplateColumn>
                                         <DataGridTemplateColumn.CellTemplate>

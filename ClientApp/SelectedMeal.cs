@@ -1,33 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 
 namespace SuperMarketPlanner
 {
     public class SelectedMeal : INotifyPropertyChanged
     {
-        private DateTime m_Date;
-        private List<string> m_Meals = new List<string>();
-        private List<string> m_ingredients = new List<string>();
+        private List<string> _Meals = new List<string>();
+        private List<string> _ingredients = new List<string>();
 
-        public DateTime DateTime
-        {
-            get
-            {
-                return m_Date;
-            }
-            set
-            {
-                m_Date = value;
-            }
-        }
+        public DateTime DateTime { get; set; }
 
         public string Date
         {
-            get {
-                return m_Date.ToString("dddd MMM dd");
+            get
+            {
+                return DateTime.ToString("dddd MMM dd");
             }
         }
 
@@ -35,11 +23,11 @@ namespace SuperMarketPlanner
         {
             get
             {
-                return m_Meals;
+                return _Meals;
             }
             set
             {
-                m_Meals.AddRange(value);
+                _Meals.AddRange(value);
                 // When we update we want to notifiy the UI to update the MealsString binding
                 OnPropertyChanged(new PropertyChangedEventArgs("MealsString"));
             }
@@ -52,13 +40,13 @@ namespace SuperMarketPlanner
         {
             get
             {
-                return string.Join("\r\n", m_Meals);
+                return string.Join("\r\n", _Meals);
             }
         }
 
         public void addMeal(string meal)
         {
-            m_Meals.Add(meal);
+            _Meals.Add(meal);
             OnPropertyChanged(new PropertyChangedEventArgs("MealsString"));
         }
 
@@ -66,18 +54,18 @@ namespace SuperMarketPlanner
         {
             get
             {
-                return m_ingredients;
+                return _ingredients;
             }
             set
             {
-                m_ingredients.AddRange(value);
+                _ingredients.AddRange(value);
             }
         }
 
         public void Clear()
         {
-            m_ingredients.Clear();
-            m_Meals.Clear();
+            _ingredients.Clear();
+            _Meals.Clear();
             OnPropertyChanged(new PropertyChangedEventArgs("MealsString"));
         }
 

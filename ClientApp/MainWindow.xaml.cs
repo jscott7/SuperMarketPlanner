@@ -21,34 +21,34 @@ namespace SuperMarketPlanner
         /// <summary>
         /// Start point for drag drop. Used to determine if we hold the mouse and move far enough to initiate drag
         /// </summary>
-        private Point startPoint = new Point();
+        private Point _startPoint = new Point();
 
         /// <summary>
         /// The index of the SelectedMealCollection being dragged
         /// </summary>
-        private int index = -1;
+        private int _index = -1;
 
         /// <summary>
         /// The index of the staple being dragged
         /// </summary>
-        private int staplesIndex = -1;
+        private int _staplesIndex = -1;
 
         /// <summary>
         /// Start date of current list
         /// </summary>
-        private DateTime startDate;
+        private DateTime _startDate;
 
-        private PrintDocument m_printDocument = new PrintDocument();
+        private PrintDocument _printDocument = new PrintDocument();
 
-        private Persist m_persist;
+        private Persist _persist;
 
         public MainWindow()
         {
             InitializeComponent();
 
             SetupXmlDataProviderSources();
-            m_printDocument.PrintPage += new PrintPageEventHandler(m_printDocument_PrintPage);
-            m_persist = new Persist(/*TODO Supply Server Address*/);
+            _printDocument.PrintPage += new PrintPageEventHandler(PrintPage);
+            _persist = new Persist(/*TODO Supply Server Address*/);
         }
 
         private void SetupXmlDataProviderSources()
@@ -81,7 +81,7 @@ namespace SuperMarketPlanner
 
         #region Printing 
 
-        void m_printDocument_PrintPage(object sender, PrintPageEventArgs e)
+        void PrintPage(object sender, PrintPageEventArgs e)
         {
             SelectedMealCollection colData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
             float leftMargin = e.MarginBounds.Left;
@@ -149,14 +149,14 @@ namespace SuperMarketPlanner
         private void ShowPrintPreview()
         {
             var printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog(); // instantiate new print preview dialog
-            printPreviewDialog1.Document = m_printDocument;
+            printPreviewDialog1.Document = _printDocument;
             printPreviewDialog1.ShowDialog(); // Show the print preview dialog, uses print page event to draw preview screen
         }
 
-        private void printList(object sender, RoutedEventArgs e)
+        private void PrintList(object sender, RoutedEventArgs e)
         {
              // Configure printer dialog box
-            System.Windows.Controls.PrintDialog dlg = new System.Windows.Controls.PrintDialog();
+            var dlg = new PrintDialog();
             dlg.PageRangeSelection = PageRangeSelection.AllPages;
             dlg.UserPageRangeEnabled = true;
 
@@ -167,14 +167,14 @@ namespace SuperMarketPlanner
             if (result == true)
             {
                 // Print document
-                m_printDocument.Print();
+                _printDocument.Print();
             }
         }
 
         /// <summary>
         /// Publish meal data to server
         /// </summary>
-        private async void publishMeals()
+        private async void PublishMeals()
         {
             SelectedMealCollection colData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
             XmlSerializer xs = new XmlSerializer(typeof(SelectedMealCollection));
@@ -213,7 +213,7 @@ namespace SuperMarketPlanner
             xmlBuilder.AppendLine("</ShoppingList>");
 
             //http://www.briangrinstead.com/blog/multipart-form-post-in-c
-            await m_persist.Post(xmlBuilder.ToString(), startDate);
+            await _persist.Post(xmlBuilder.ToString(), _startDate);
         }
 
         #endregion
@@ -225,7 +225,7 @@ namespace SuperMarketPlanner
             var mealData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
             var ingredientsData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
 
-            startDate = await m_persist.LoadLatest(mealData, ingredientsData);    
+            _startDate = await _persist.LoadLatest(mealData, ingredientsData);    
         }
 
         private void NewList_Click(object sender, RoutedEventArgs e)
@@ -245,7 +245,7 @@ namespace SuperMarketPlanner
             }
 
             DateTime date = dlg.SelectedDate;
-            startDate = date;
+            _startDate = date;
 
             int numberOfUnits = dlg.NumberOfUnits;
             UnitsEnum unitSize = dlg.UnitSize;
@@ -305,7 +305,7 @@ namespace SuperMarketPlanner
 
         private void Sync_Click(object sender, RoutedEventArgs e)
         {
-            publishMeals();
+            PublishMeals();
         }
 
         public string AppDataPath
@@ -323,7 +323,7 @@ namespace SuperMarketPlanner
         /// <param name="sender">The DataGridRow</param>
         /// <param name="e"></param>
         /// <remarks>Toggles the DetailsVisiblity from Collapsed to Visible</remarks>
-        private void mealGrid_RowDoubleClick(object sender, RoutedEventArgs e)
+        private void MealGrid_RowDoubleClick(object sender, RoutedEventArgs e)
         {
             var row = (DataGridRow)sender;
             row.DetailsVisibility = row.DetailsVisibility == System.Windows.Visibility.Collapsed ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
@@ -440,7 +440,7 @@ namespace SuperMarketPlanner
         /// <summary>
         /// Returns the row of the DataGrid that's been clicked on in the Drag event
         /// </summary>
-        private DataGridRow getDataGridRowItem(DataGrid inputGrid, int index)
+        private DataGridRow GetDataGridRowItem(DataGrid inputGrid, int index)
         {
             return inputGrid.ItemContainerGenerator.ContainerFromIndex(index) as DataGridRow;
         }
@@ -460,12 +460,12 @@ namespace SuperMarketPlanner
         /// <summary>
         /// Gets the index of the DataGrid Rod under the drag mouse click
         /// </summary>
-        private int getDataGridItemCurrentRowIndex(GetDragDropPosition pos, DataGrid inputGrid)
+        private int GetDataGridItemCurrentRowIndex(GetDragDropPosition pos, DataGrid inputGrid)
         {
             int curIndex = -1;
             for (int i = 0; i < inputGrid.Items.Count; i++)
             {
-                DataGridRow itm = getDataGridRowItem(inputGrid, i);
+                DataGridRow itm = GetDataGridRowItem(inputGrid, i);
                 if (isTheMouseOnTargetRow(itm, pos))
                 {
                     curIndex = i;
@@ -476,32 +476,32 @@ namespace SuperMarketPlanner
             return curIndex;
         }
 
-        private void mealGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void MealGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // Store the mouse position
-            startPoint = e.GetPosition(null);
-            index = getDataGridItemCurrentRowIndex(e.GetPosition, mealGrid);
+            _startPoint = e.GetPosition(null);
+            _index = GetDataGridItemCurrentRowIndex(e.GetPosition, mealGrid);
         }
 
-        private void staplesGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void StaplesGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // Store the mouse position
-            startPoint = e.GetPosition(null);
-            staplesIndex = getDataGridItemCurrentRowIndex(e.GetPosition, staplesGrid);
+            _startPoint = e.GetPosition(null);
+            _staplesIndex = GetDataGridItemCurrentRowIndex(e.GetPosition, staplesGrid);
         }
 
-        private void staplesGrid_MouseMove(object sender, MouseEventArgs e)
+        private void StaplesGrid_MouseMove(object sender, MouseEventArgs e)
         {
-            if (staplesIndex < 0) { return; }
+            if (_staplesIndex < 0) { return; }
             Point currentPoint = e.GetPosition(null);
-            Vector diff = startPoint - currentPoint;
+            Vector diff = _startPoint - currentPoint;
 
             if (e.LeftButton == MouseButtonState.Pressed &&
                 (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
                 Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
             {
 
-                var obj = staplesGrid.Items[staplesIndex] as XmlElement;
+                var obj = staplesGrid.Items[_staplesIndex] as XmlElement;
 
                 // Initialise the drag & drop operation
                 DataObject dragData = new DataObject("dragStapleFormat", obj);
@@ -509,18 +509,18 @@ namespace SuperMarketPlanner
             }
         }
 
-        private void mealGrid_MouseMove(object sender, MouseEventArgs e)
+        private void MealGrid_MouseMove(object sender, MouseEventArgs e)
         {
-            if (index < 0) { return; }
+            if (_index < 0) { return; }
             Point currentPoint = e.GetPosition(null);
-            Vector diff = startPoint - currentPoint;
+            Vector diff = _startPoint - currentPoint;
 
             if (e.LeftButton == MouseButtonState.Pressed &&
                 (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
                 Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
             {
 
-                var obj = mealGrid.Items[index] as XmlElement;
+                var obj = mealGrid.Items[_index] as XmlElement;
                 // Initialise the drag & drop operation
                 DataObject dragData = new DataObject("dragMealFormat", obj);
                 DragDrop.DoDragDrop(mealGrid, dragData, DragDropEffects.Copy);
@@ -531,7 +531,7 @@ namespace SuperMarketPlanner
         /// Event called when drag enters a drop region
         /// </summary>
         /// <param name="sender">This will be the control under the mouse</param>
-        private void list_DragEnter(object sender, DragEventArgs e)
+        private void List_DragEnter(object sender, DragEventArgs e)
         {   
             if (!e.Data.GetDataPresent("dragMealFormat"))
             {   
@@ -539,7 +539,7 @@ namespace SuperMarketPlanner
             }
         }
 
-        private void allItems_DragEnter(object sender, DragEventArgs e)
+        private void AllItems_DragEnter(object sender, DragEventArgs e)
         {
             if (!e.Data.GetDataPresent("dragStapleFormat"))
             {
@@ -576,7 +576,7 @@ namespace SuperMarketPlanner
             return insertionIndex;
         }
 
-        private void allItems_DragDrop(object sender, DragEventArgs e)
+        private void AllItems_DragDrop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent("dragStapleFormat"))
             {
@@ -591,7 +591,7 @@ namespace SuperMarketPlanner
         /// <summary>
         /// The drop event
         /// </summary>
-        private void list_DragDrop(object sender, DragEventArgs e)
+        private void List_DragDrop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent("dragMealFormat"))
             {
@@ -629,7 +629,7 @@ namespace SuperMarketPlanner
                 }
             }
 
-            index = -1;
+            _index = -1;
         }
 
         #endregion
