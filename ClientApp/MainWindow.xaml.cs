@@ -72,7 +72,7 @@ namespace SuperMarketPlanner
 
         private void FirstTimeAppDataSetup(  )
         {
-            string xmlSourceDirectory = System.IO.Directory.GetCurrentDirectory() + "\\Data";
+            string xmlSourceDirectory = Directory.GetCurrentDirectory() + "\\Data";
             string destinationDirectory = AppDataPath + "\\SuperMarketPlanner";
             Directory.CreateDirectory(destinationDirectory);
             File.Copy(xmlSourceDirectory + "\\SuperMarketDataMeals.xml", destinationDirectory + "\\SuperMarketDataMeals.xml" );
@@ -283,24 +283,22 @@ namespace SuperMarketPlanner
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             var xmlMealDataProvider = (XmlDataProvider)this.FindResource("MealData");
-        
-            // TODO : Refactor
-            Uri mealUri = new Uri(xmlMealDataProvider.Source.ToString());
-            if (mealUri.IsFile)
-            {
-                string localMealsSource = mealUri.AbsolutePath;
-                xmlMealDataProvider.Document.Save(localMealsSource);
-            }
+            SaveXmlDataProvider(xmlMealDataProvider);
 
             var xmlStaplesDataProvider = (XmlDataProvider)this.FindResource("StaplesData");
-            Uri staplesUri = new Uri(xmlStaplesDataProvider.Source.ToString());
-            if (staplesUri.IsFile)
-            {
-                string staplesSource = staplesUri.AbsolutePath;
-                xmlStaplesDataProvider.Document.Save(staplesSource);
-            }
+            SaveXmlDataProvider(xmlStaplesDataProvider);
 
-             MessageBox.Show("Saved meals and staples", "Successful save", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Saved meals and staples", "Successful save", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void SaveXmlDataProvider(XmlDataProvider xmlDataProvider)
+        {
+            var uri = new Uri(xmlDataProvider.Source.ToString());
+            if (uri.IsFile)
+            {
+                var path = uri.AbsolutePath;
+                xmlDataProvider.Document.Save(path);
+            }
         }
 
         private void Sync_Click(object sender, RoutedEventArgs e)
@@ -326,7 +324,7 @@ namespace SuperMarketPlanner
         private void MealGrid_RowDoubleClick(object sender, RoutedEventArgs e)
         {
             var row = (DataGridRow)sender;
-            row.DetailsVisibility = row.DetailsVisibility == System.Windows.Visibility.Collapsed ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+            row.DetailsVisibility = row.DetailsVisibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
 
             // When we collapse the details view we need to refresh the grid, otherwise the rows beneath will still refer to the expanded item
             // This is essentially a resizing problem

@@ -5,7 +5,7 @@ using SuperMarketPlanner;
 namespace SuperMarketPlannerTest
 {
     [TestClass]
-    public class UnitTest1
+    public class SelectedMealTests
     {
         [TestMethod]
         public void TestSelectedMealDate()

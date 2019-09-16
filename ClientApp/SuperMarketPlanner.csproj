@@ -105,6 +105,7 @@
     </Compile>
     <Compile Include="FileParameter.cs" />
     <Compile Include="Persist.cs" />
+    <Compile Include="RowValidationRule.cs" />
     <Compile Include="SelectedIngredient.cs" />
     <Compile Include="SelectedIngredientsCollection.cs" />
     <Compile Include="SelectedMeal.cs" />

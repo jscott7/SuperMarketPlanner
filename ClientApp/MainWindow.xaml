@@ -141,6 +141,9 @@
                                                     <DataGridTemplateColumn CellTemplate="{StaticResource editDeleteButtonTemplate}"/>
                                                     <DataGridTextColumn Header="Ingredients" Binding="{Binding XPath=.}" Width="Auto"/>
                                                 </DataGrid.Columns>
+                                                <DataGrid.RowValidationRules>
+                                                    <src:RowValidationRule ValidationStep="UpdatedValue"/>
+                                                </DataGrid.RowValidationRules>
                                             </DataGrid>
                                             <Button Content="Add New Ingredient" Click="ButtonClick_AddNewIngredient"/>
                                         </StackPanel>
@@ -169,6 +172,9 @@
                                     </DataGridTemplateColumn>
                                     <DataGridTextColumn Binding="{Binding XPath=@name}" FontSize="16" FontFamily="Tahoma" />
                                 </DataGrid.Columns>
+                                <DataGrid.RowValidationRules>
+                                    <src:RowValidationRule ValidationStep="UpdatedValue"/>
+                                </DataGrid.RowValidationRules>
                             </DataGrid>
                             <Button Grid.Row="1" Content="Add New Staple" Click="ButtonClick_AddNewStaple"/>
                         </Grid>
