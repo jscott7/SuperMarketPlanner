@@ -1,22 +1,41 @@
 ﻿<Window x:Class="SuperMarketPlanner.DateDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Create New List" Height="261" Width="300" ResizeMode="NoResize" WindowStyle="ToolWindow">
-    <StackPanel Orientation="Vertical" Height="220">
+        Title="Create New List" Height="280" Width="300" ResizeMode="NoResize" WindowStyle="ToolWindow">
+    <StackPanel Orientation="Vertical" Height="240">
         <Calendar Name="calendar" Height="170" Width="180" />
         <StackPanel Orientation="Horizontal">
-            <Label>For</Label>
-            <TextBox Name="chosenNumber" Width="50">7</TextBox>
-            <ComboBox Name="units" Width="70">
-                <ComboBoxItem Content="Days" IsSelected="True" />
-                <ComboBoxItem Content="Weeks" />
-                <ComboBoxItem Content="Months" />
-            </ComboBox>
-
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="57"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Column="1">
+                    <Label>For</Label>
+                    <TextBox Name="chosenNumber" Width="50">7</TextBox>
+                    <Separator Width="10"/>
+                    <ComboBox Name="units" Width="70">
+                        <ComboBoxItem Content="Days" IsSelected="True" />
+                        <ComboBoxItem Content="Weeks" />
+                        <ComboBoxItem Content="Months" />
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
         </StackPanel>
+        <StackPanel Height="10"/>
         <StackPanel Orientation="Horizontal">
-            <Button Click="okButtonClick">OK</Button>
-            <Button Click="cancelButtonClick">Cancel</Button>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Width="75" Grid.Column="3"  Click="okButtonClick">OK</Button>
+                <Button Width="75" Grid.Column="1" Click="cancelButtonClick">Cancel</Button>
+            </Grid>
+
         </StackPanel>
     </StackPanel>
 </Window>
