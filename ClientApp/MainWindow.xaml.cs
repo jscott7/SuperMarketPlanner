@@ -587,7 +587,7 @@ namespace SuperMarketPlanner
         }
 
         /// <summary>
-        /// The drop event
+        /// The drop event for adding a meal to the Daily List
         /// </summary>
         private void List_DragDrop(object sender, DragEventArgs e)
         {
@@ -598,7 +598,7 @@ namespace SuperMarketPlanner
                 int updateIndex = DecideDropTarget(e, (ItemsControl)sender);
                 var xElement = e.Data.GetData("dragMealFormat") as XmlElement;
                 var colData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
-                var mealToUpdate = colData[updateIndex];
+                SelectedMeal mealToUpdate = colData[updateIndex];
 
                 mealToUpdate.addMeal(xElement.GetAttribute("name"));
 
@@ -612,16 +612,13 @@ namespace SuperMarketPlanner
                     mealToUpdate.Ingredients.Add(ingredientNode.InnerText);
                 }
 
-                // Refresh the selected ingredient view
+                // Update the selected ingredient view
                 var ingredientData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
-                ingredientData.Clear();
-
-                foreach (SelectedMeal meal in colData)
+                if (mealToUpdate.Ingredients != null)
                 {
-                    if (meal.Ingredients == null) {continue;}
-                    foreach (string ingredient in meal.Ingredients)
-                    {                   
-                        var selectedIngredient = new SelectedIngredient(ingredient, meal.DateTime.ToString("yyyy-MM-dd"));
+                    foreach (string ingredient in mealToUpdate.Ingredients)
+                    {
+                        var selectedIngredient = new SelectedIngredient(ingredient, mealToUpdate.DateTime.ToString("yyyy-MM-dd"));
                         ingredientData.Add(selectedIngredient);
                     }
                 }
