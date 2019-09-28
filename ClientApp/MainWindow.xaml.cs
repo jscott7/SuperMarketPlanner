@@ -619,7 +619,10 @@ namespace SuperMarketPlanner
                     foreach (string ingredient in mealToUpdate.Ingredients)
                     {
                         var selectedIngredient = new SelectedIngredient(ingredient, mealToUpdate.DateTime.ToString("yyyy-MM-dd"));
-                        ingredientData.Add(selectedIngredient);
+                        if (!ingredientData.Contains(selectedIngredient))
+                        {
+                            ingredientData.Add(selectedIngredient);
+                        }
                     }
                 }
             }
