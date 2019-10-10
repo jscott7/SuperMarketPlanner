@@ -1,0 +1,28 @@
+openssl genrsa -out key.pem 2048
+openssl req -new -sha256 -key key.pem -out csr.csr
+openssl req -x509 -sha256 -days 365 -key key.pem -in csr.csr -out certificate.pem
+
+OR
+==
+openssl req -config config.txt -new -x509 -sha256 -newkey rsa:2048 -nodes -keyout jsco-key.pem -days 365 -out jsco-cert.pem
+
+THIS WORKS
+==========
+Create CA Private key
+openssl genrsa -des3 -out myCA.key 2048
+
+Create CA cert
+openssl req -x509 -new -nodes -key myCA.key -sha256 -days 3650 -out myCA.pem
+
+^^ Install this on Chrome CAs
+
+Create new private key
+openssl req -new -key jsco-cert.key -out jsco.csr
+
+Create certificate signing request
+openssl req -new -key jsco-cert.key -out jsco.csr
+
+Create new certificate, sign against CA
+openssl x509 -req -in jsco.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial -out jsco-cert.crt -days 365 -sha256 -extfile config.txt
+
+Start up web py with this cert and private key - opens on chrome with no issues
