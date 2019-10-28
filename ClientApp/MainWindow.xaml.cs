@@ -146,13 +146,6 @@ namespace SuperMarketPlanner
             }
         }
 
-        private void ShowPrintPreview()
-        {
-            var printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog(); // instantiate new print preview dialog
-            printPreviewDialog1.Document = _printDocument;
-            printPreviewDialog1.ShowDialog(); // Show the print preview dialog, uses print page event to draw preview screen
-        }
-
         private void PrintList(object sender, RoutedEventArgs e)
         {
              // Configure printer dialog box

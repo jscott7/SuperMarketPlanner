@@ -6,7 +6,7 @@ using System.Xml;
 using System.Linq;
 using System.Collections.Generic;
 
-[assembly: InternalsVisibleTo("SuperMarketPlannerTest")]
+[assembly: InternalsVisibleTo("SuperMarketPlannerUnitTests")]
 namespace SuperMarketPlanner
 {
     public class RowValidationRule : ValidationRule

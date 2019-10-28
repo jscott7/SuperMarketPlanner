@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
+using System.Net.Http;
 using System.Windows;
 using System.Xml;
 
@@ -88,7 +88,7 @@ namespace SuperMarketPlanner
         /// <returns></returns>
         public async Task<string> Post(string payload, DateTime listDate)
         {
-            using (var client = new System.Net.Http.HttpClient())
+            using (var client = new HttpClient())
             {
                 try
                 {
