@@ -30,7 +30,7 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
-    projects: |
+    projects:
      '$(solution)'
 
 #- task: VSBuild@1
