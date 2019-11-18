@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("SuperMarketPlanner")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("JSco")]
 [assembly: AssemblyProduct("SuperMarketPlanner")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2013")]
+[assembly: AssemblyCopyright("Copyright © JSco 2013-2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

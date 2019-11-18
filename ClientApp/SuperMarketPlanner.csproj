@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Authors>Jonathan Scott</Authors>
   </PropertyGroup>
   <!-- <ItemGroup>
     <None Remove="Images\noresults_uncompressed.ico" />
@@ -19,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\noresults_uncompressed.ico" />
-    <Resource Include="Images\Settings.ico"/>
+    <Resource Include="Images\Settings.ico" />
     <Resource Include="ToolbarGraphics\Azure_blue_64x.png" />
     <Resource Include="ToolbarGraphics\FloppyDisk.ico" />
     <Resource Include="ToolbarGraphics\folder_open.ico" />

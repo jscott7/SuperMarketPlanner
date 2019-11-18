@@ -12,12 +12,24 @@ namespace SuperMarketPlanner
     /// </summary>
     class Persist
     {
+        private string _serverUrl = "";
+  
+        public Persist(string serverUrl)
+        {
+            _serverUrl = serverUrl;
+        }
+
         public async Task<DateTime> LoadLatest(SelectedMealCollection mealData, SelectedIngredientsCollection ingredientsData)
         {
             DateTime startDate = DateTime.MinValue;
 
             try
             {
+                if (_serverUrl == "NOSERVER")
+                {
+                    throw new Exception("No server has been setup. Please go to settings");
+                }
+
                 string data = await ServerGet("");
 
                 var xmlDoc = new XmlDocument();
@@ -75,7 +87,7 @@ namespace SuperMarketPlanner
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to load data from server: " + ex, "Failed Load", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Unable to load data from server: " + ex.Message, "Failed Load", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             return startDate;
@@ -92,6 +104,11 @@ namespace SuperMarketPlanner
             {
                 try
                 {
+                    if (_serverUrl == "NOSERVER")
+                    {
+                        throw new Exception("No server has been setup. Please go to settings");
+                    }
+
                     // Key is date of start of list in yyyyMMdd format         
                     var postData = new KeyValuePair<string, string>[]
                     {
@@ -100,7 +117,7 @@ namespace SuperMarketPlanner
 
                     var content = new FormUrlEncodedContent(postData);
 
-                    var response = await client.PostAsync("http://192.168.0.202:8080/index", content);
+                    var response = await client.PostAsync(_serverUrl, content);
 
                     if (!response.IsSuccessStatusCode)
                     {
@@ -120,7 +137,7 @@ namespace SuperMarketPlanner
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Unable to send data to server: " + ex, "Failed Sync", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Unable to send data to server: {ex.Message}", "Failed Sync", MessageBoxButton.OK, MessageBoxImage.Error);
                     return "";
                 }
             }
@@ -128,10 +145,23 @@ namespace SuperMarketPlanner
 
         private async Task<string> ServerGet(string request)
         {
-            using (var client = new HttpClient())
+            try
             {
-                var data = await client.GetStringAsync("http://192.168.0.202:8080/index");
-                return data;
+                if (_serverUrl == "NOSERVER")
+                {
+                    throw new Exception("No server has been setup. Please go to settings");
+                }
+
+                using (var client = new HttpClient())
+                {
+                    var data = await client.GetStringAsync(_serverUrl);
+                    return data;
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Unable to get data from server: {ex.Message}", "Failed Sync", MessageBoxButton.OK, MessageBoxImage.Error);
+                return "";
             }
         }
     }

@@ -48,7 +48,21 @@ namespace SuperMarketPlanner
 
             SetupXmlDataProviderSources();
             _printDocument.PrintPage += new PrintPageEventHandler(PrintPage);
-            _persist = new Persist(/*TODO Supply Server Address*/);
+
+            CreateServerConnection();
+        }
+
+        private void CreateServerConnection()
+        {
+            var serverUrl = SettingsUtilities.LoadSetting("serverurl");
+            if (serverUrl != null)
+            {
+                _persist = new Persist(serverUrl.ToString());
+            }
+            else
+            {
+                _persist = new Persist("NOSERVER");
+            }
         }
 
         private void SetupXmlDataProviderSources()
@@ -297,6 +311,15 @@ namespace SuperMarketPlanner
         private void Sync_Click(object sender, RoutedEventArgs e)
         {
             PublishMeals();
+        }
+
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            var settingsDialog = new Settings();
+            if (settingsDialog.ShowDialog() == true)
+            {
+                CreateServerConnection();
+            }
         }
 
         public string AppDataPath

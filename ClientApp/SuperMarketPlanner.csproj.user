@@ -10,5 +10,6 @@
     <ErrorReportUrlHistory />
     <FallbackCulture>en-US</FallbackCulture>
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
+    <_LastSelectedProfileId>C:\Family Files\Jonathan\IT\GitHub\SuperMarketPlanner\ClientApp\Properties\PublishProfiles\SelfContained.pubxml</_LastSelectedProfileId>
   </PropertyGroup>
 </Project>

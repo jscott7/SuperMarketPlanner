@@ -68,6 +68,7 @@
             <Button Click="Sync_Click">
                 <Image Source="ToolbarGraphics\Azure_blue_64x.png" ToolTip="Sync List" />
             </Button>
+            <Button Click="Settings_Click">Settings</Button>
         </ToolBar>
         <GridSplitter Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Width="4"/>
         <DockPanel Grid.Column="1" Grid.Row="1">
