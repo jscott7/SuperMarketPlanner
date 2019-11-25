@@ -6,11 +6,11 @@
     <Window.Resources>
         <!-- Meal Data needs to be in the window resources so it can be accessed easily by the save event -->
         <XmlDataProvider x:Name="Meals" x:Key="MealData" XPath="/SuperMarketData/Meals/Meal"/>
-        <XmlDataProvider x:Name="Staples" x:Key="StaplesData" XPath="/SuperMarketData/Staples/Staple"/>
 
         <src:SelectedMealCollection x:Key="SelectedMealCollectionData"/>
         <src:SelectedIngredientsCollection x:Key="SelectedIngredientsCollectionData"/>
-
+        <src:StaplesCollection x:Key="StaplesCollectionData"/>
+        
         <Style TargetType="TextBlock" x:Key="SelectedMealStyle">
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="FontFamily" Value="Tahoma"/>
@@ -162,7 +162,7 @@
                                 <RowDefinition/>
                                 <RowDefinition Height="20"/>
                             </Grid.RowDefinitions>
-                            <DataGrid Grid.Row="0" Name="staplesGrid" AllowDrop="True" Background="White" GridLinesVisibility="None" DataContext="{StaticResource StaplesData}" ItemsSource="{Binding}" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserSortColumns="True" CanUserResizeColumns="False" CanUserResizeRows="False" SelectionUnit="FullRow" SelectionMode="Single" PreviewMouseLeftButtonDown="StaplesGrid_PreviewMouseLeftButtonDown" MouseMove="StaplesGrid_MouseMove" CanUserAddRows="True">
+                            <DataGrid Grid.Row="0" Name="staplesGrid" AllowDrop="True" Background="White" GridLinesVisibility="None" ItemsSource="{Binding Source={StaticResource StaplesCollectionData}}" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserSortColumns="True" CanUserResizeColumns="False" CanUserResizeRows="False" SelectionUnit="FullRow" SelectionMode="Single" PreviewMouseLeftButtonDown="StaplesGrid_PreviewMouseLeftButtonDown" MouseMove="StaplesGrid_MouseMove" CanUserAddRows="True">
                                 <DataGrid.Columns>
                                     <DataGridTemplateColumn>
                                         <DataGridTemplateColumn.CellTemplate>
@@ -173,13 +173,12 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTextColumn Binding="{Binding XPath=@name}" FontSize="16" FontFamily="Tahoma" />
+                                    <DataGridTextColumn Binding="{Binding Staple}" FontSize="16" FontFamily="Tahoma" />
                                 </DataGrid.Columns>
-                                <DataGrid.RowValidationRules>
+                           <!--     <DataGrid.RowValidationRules>
                                     <src:RowValidationRule ValidationStep="UpdatedValue"/>
-                                </DataGrid.RowValidationRules>
-                            </DataGrid>
-                            <Button Grid.Row="1" Content="Add New Staple" Click="ButtonClick_AddNewStaple"/>
+                                </DataGrid.RowValidationRules>-->
+                            </DataGrid> 
                         </Grid>
                     </ScrollViewer>
                 </TabItem>

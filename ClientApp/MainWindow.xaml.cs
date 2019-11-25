@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing.Printing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +10,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace SuperMarketPlanner
@@ -69,19 +71,31 @@ namespace SuperMarketPlanner
         {
             // We need to set the XmlDataProvider to be in the appData folder
             var mealsXmlDataProvider = FindResource("MealData") as XmlDataProvider;
-            var staplesXmlDataProvider = FindResource("StaplesData") as XmlDataProvider;
 
             string mealsPath = AppDataPath + "\\SuperMarketPlanner\\SuperMarketDataMeals.xml";
             string staplesPath = AppDataPath + "\\SuperMarketPlanner\\SuperMarketDataStaples.xml";
-
+         
             // One-time only on startup
             if (!File.Exists(mealsPath))
             {
                 FirstTimeAppDataSetup();
             }
 
+            // Read staples data using Linq
+            XDocument xDocument = XDocument.Load(staplesPath);
+            IEnumerable<string> staples = from x in xDocument.Descendants("Staple")
+                                          select (string)x.Attribute("name").Value;
+
+            var sortedStaples = staples.ToList();
+            sortedStaples.Sort();
+            var staplesCollection = (StaplesCollection)this.FindResource("StaplesCollectionData");
+
+            foreach(var staple in sortedStaples)
+            {
+                staplesCollection.Add(new StapleItem() { Staple = staple });
+            }
+
             mealsXmlDataProvider.Source = new Uri(mealsPath);
-            staplesXmlDataProvider.Source = new Uri(staplesPath);
         }
 
         private void FirstTimeAppDataSetup(  )
@@ -278,7 +292,7 @@ namespace SuperMarketPlanner
                 date = date.AddDays(1);
             }
 
-            SelectedIngredientsCollection ingData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
+            var ingData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
             ingData.Clear();
         }
 
@@ -292,8 +306,23 @@ namespace SuperMarketPlanner
             var xmlMealDataProvider = (XmlDataProvider)this.FindResource("MealData");
             SaveXmlDataProvider(xmlMealDataProvider);
 
-            var xmlStaplesDataProvider = (XmlDataProvider)this.FindResource("StaplesData");
-            SaveXmlDataProvider(xmlStaplesDataProvider);
+            var staplesCollection = (StaplesCollection)this.FindResource("StaplesCollectionData");
+            string staplesPath = AppDataPath + "\\SuperMarketPlanner\\SuperMarketDataStaples.xml";
+
+            XDocument xDocument = new XDocument();
+          
+            XElement staplesElement = new XElement("Staples");
+            foreach(var stapleItem in staplesCollection)
+            {
+                XElement stapleElement = new XElement("Staple", new XAttribute("name", stapleItem.Staple));
+                staplesElement.Add(stapleElement);
+            }
+
+            XElement superMarketDataElement = new XElement("SuperMarketData");
+            superMarketDataElement.Add(staplesElement);
+            xDocument.Add(superMarketDataElement);
+
+            xDocument.Save(staplesPath);
 
             MessageBox.Show("Saved meals and staples", "Successful save", MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -353,9 +382,10 @@ namespace SuperMarketPlanner
 
         private void ButtonClick_DeleteStaple(object sender, RoutedEventArgs e)
         {
-            XmlNode obj = ((FrameworkElement)sender).DataContext as XmlNode;
-            XmlNode parent = obj.ParentNode;
-            parent.RemoveChild(obj);
+            var staplesCollection = (StaplesCollection)this.FindResource("StaplesCollectionData");
+            var stapleItem =  ((FrameworkElement)sender).DataContext as StapleItem;
+            staplesCollection.Remove(stapleItem);
+
         }
 
         private void ButtonClick_DeleteMeal(object sender, RoutedEventArgs e)
@@ -393,17 +423,6 @@ namespace SuperMarketPlanner
             var newElement = xmlDataProvider.Document.CreateElement("Ingredient");
 
             AppendChildToDataGrid(ingredientGrid, newElement);
-        }
-
-        private void ButtonClick_AddNewStaple(object sender, RoutedEventArgs e)
-        {
-            var xmlDataProvider = (XmlDataProvider)this.FindResource("StaplesData");
-            var newElement = xmlDataProvider.Document.CreateElement("Staple");
-            var attribute = xmlDataProvider.Document.CreateAttribute("name");
-            newElement.Attributes.Append(attribute);
-
-            // We can't change the Items collection directly, so we need to find the parent XmlNode and append the child to that
-            xmlDataProvider.Document.SelectSingleNode("//Staples").AppendChild(newElement);
         }
 
         private void ButtonClick_AddNewMeal(object sender, RoutedEventArgs e)
@@ -515,7 +534,7 @@ namespace SuperMarketPlanner
                 Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
             {
 
-                var obj = staplesGrid.Items[_staplesIndex] as XmlElement;
+                var obj = staplesGrid.Items[_staplesIndex] as StapleItem;
 
                 // Initialise the drag & drop operation
                 DataObject dragData = new DataObject("dragStapleFormat", obj);
@@ -595,8 +614,8 @@ namespace SuperMarketPlanner
             if (e.Data.GetDataPresent("dragStapleFormat"))
             {
                 var ingredientData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
-                var stapleElement = e.Data.GetData("dragStapleFormat") as XmlElement;
-                string stapleName = stapleElement.Attributes.GetNamedItem("name").Value;
+                var stapleElement = e.Data.GetData("dragStapleFormat") as StapleItem;
+                string stapleName = stapleElement.Staple;
                 var staple = new SelectedIngredient(stapleName, "");
                 ingredientData.Add(staple);
             }

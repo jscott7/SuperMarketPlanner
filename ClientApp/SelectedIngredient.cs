@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel;
 
 namespace SuperMarketPlanner
 {
@@ -91,12 +87,6 @@ namespace SuperMarketPlanner
         public void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(this, e);
-
-            //Replaces the following code
-         //   if (PropertyChanged != null)
-         //   {
-         //       PropertyChanged(this, e);
-         //   }
         }
     }
 }
