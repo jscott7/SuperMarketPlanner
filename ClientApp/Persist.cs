@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Windows;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace SuperMarketPlanner
 {
@@ -141,6 +142,24 @@ namespace SuperMarketPlanner
                     return "";
                 }
             }
+        }
+
+        public static void PersistStaplesToFile(string staplesPath, StaplesCollection staplesCollection)
+        {
+            XDocument xDocument = new XDocument();
+
+            XElement staplesElement = new XElement("Staples");
+            foreach (var stapleItem in staplesCollection)
+            {
+                XElement stapleElement = new XElement("Staple", new XAttribute("name", stapleItem.Staple));
+                staplesElement.Add(stapleElement);
+            }
+
+            XElement superMarketDataElement = new XElement("SuperMarketData");
+            superMarketDataElement.Add(staplesElement);
+            xDocument.Add(superMarketDataElement);
+
+            xDocument.Save(staplesPath);
         }
 
         private async Task<string> ServerGet(string request)

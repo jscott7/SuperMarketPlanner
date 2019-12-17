@@ -86,6 +86,11 @@ namespace SuperMarketPlanner
             IEnumerable<string> staples = from x in xDocument.Descendants("Staple")
                                           select (string)x.Attribute("name").Value;
 
+            // For sorted meals
+            // Create a new MealItem and MealsCollection
+            // Populate it from the meals path persisted xml
+            // XDocument mealsDocument = XDocument.Load(mealsPath);
+
             var sortedStaples = staples.ToList();
             sortedStaples.Sort();
             var staplesCollection = (StaplesCollection)this.FindResource("StaplesCollectionData");
@@ -303,28 +308,22 @@ namespace SuperMarketPlanner
         /// <param name="e"></param>
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            var xmlMealDataProvider = (XmlDataProvider)this.FindResource("MealData");
-            SaveXmlDataProvider(xmlMealDataProvider);
-
-            var staplesCollection = (StaplesCollection)this.FindResource("StaplesCollectionData");
-            string staplesPath = AppDataPath + "\\SuperMarketPlanner\\SuperMarketDataStaples.xml";
-
-            XDocument xDocument = new XDocument();
-          
-            XElement staplesElement = new XElement("Staples");
-            foreach(var stapleItem in staplesCollection)
+            try
             {
-                XElement stapleElement = new XElement("Staple", new XAttribute("name", stapleItem.Staple));
-                staplesElement.Add(stapleElement);
+                var xmlMealDataProvider = (XmlDataProvider)this.FindResource("MealData");
+                SaveXmlDataProvider(xmlMealDataProvider);
+
+                var staplesCollection = (StaplesCollection)this.FindResource("StaplesCollectionData");
+                string staplesPath = AppDataPath + "\\SuperMarketPlanner\\SuperMarketDataStaples.xml";
+
+                Persist.PersistStaplesToFile(staplesPath, staplesCollection);
+
+                MessageBox.Show("Saved meals and staples", "Successful save", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-
-            XElement superMarketDataElement = new XElement("SuperMarketData");
-            superMarketDataElement.Add(staplesElement);
-            xDocument.Add(superMarketDataElement);
-
-            xDocument.Save(staplesPath);
-
-            MessageBox.Show("Saved meals and staples", "Successful save", MessageBoxButton.OK, MessageBoxImage.Information);
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Can't save meals and staples: {ex.Message}", "Failed save", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void SaveXmlDataProvider(XmlDataProvider xmlDataProvider)
@@ -416,7 +415,6 @@ namespace SuperMarketPlanner
 
         private void ButtonClick_AddNewIngredient(object sender, RoutedEventArgs e)
         {
-            //TODO: Robust checks
             var obj = ((FrameworkElement)sender).Parent as StackPanel;
             var ingredientGrid = (DataGrid)obj.Children[0];
             var xmlDataProvider = (XmlDataProvider)this.FindResource("MealData");
@@ -448,7 +446,7 @@ namespace SuperMarketPlanner
         }
 
         /// <summary>
-        ///  We can't change the Items collection directly on a DataGrid, so we need to find the parent XmlNode and append the xmlnode to that
+        /// We can't change the Items collection directly on a DataGrid, so we need to find the parent XmlNode and append the xmlnode to that
         /// </summary>
         /// <param name="grid"></param>
         /// <param name="newElement"></param>
