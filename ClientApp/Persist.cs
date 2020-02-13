@@ -5,6 +5,9 @@ using System.Net.Http;
 using System.Windows;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Serialization;
+using System.IO;
+using System.Windows.Data;
 
 namespace SuperMarketPlanner
 {
@@ -146,20 +149,21 @@ namespace SuperMarketPlanner
 
         public static void PersistStaplesToFile(string staplesPath, StaplesCollection staplesCollection)
         {
-            XDocument xDocument = new XDocument();
-
-            XElement staplesElement = new XElement("Staples");
-            foreach (var stapleItem in staplesCollection)
+            var xs = new XmlSerializer(typeof(StaplesCollection));
+            using (StreamWriter wr = new StreamWriter(staplesPath))
             {
-                XElement stapleElement = new XElement("Staple", new XAttribute("name", stapleItem.Staple));
-                staplesElement.Add(stapleElement);
+                xs.Serialize(wr, staplesCollection);
             }
+        }
 
-            XElement superMarketDataElement = new XElement("SuperMarketData");
-            superMarketDataElement.Add(staplesElement);
-            xDocument.Add(superMarketDataElement);
-
-            xDocument.Save(staplesPath);
+        public static void PersistMealsToFile(XmlDataProvider xmlDataProvider)
+        {
+            var uri = new Uri(xmlDataProvider.Source.ToString());
+            if (uri.IsFile)
+            {
+                var path = uri.AbsolutePath;
+                xmlDataProvider.Document.Save(path);
+            }
         }
 
         private async Task<string> ServerGet(string request)

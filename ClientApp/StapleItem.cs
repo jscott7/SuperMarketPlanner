@@ -1,22 +1,12 @@
 ﻿using System.ComponentModel;
+using System.Xml.Serialization;
 
 namespace SuperMarketPlanner
 {
     public class StapleItem : INotifyPropertyChanged
     {
-        private string _staple;
-
-        public string Staple
-        {
-            get
-            {
-                return _staple;
-            }
-            set
-            {
-                _staple = value;
-            }
-        }
+        [XmlAttribute(AttributeName = "name")]
+        public string Staple { get; set; }
 
         // INotifyPropertyChanged is used to allow the ObservableCollection to be upated when we update a property
         public event PropertyChangedEventHandler PropertyChanged;
@@ -32,7 +22,7 @@ namespace SuperMarketPlanner
         public override bool Equals(object obj)
         {
             var rhs = obj as StapleItem;
-            if (rhs != null && rhs.Staple == _staple)
+            if (rhs != null && rhs.Staple == Staple)
             {
                 return true;
             }
@@ -43,9 +33,9 @@ namespace SuperMarketPlanner
 
         public override int GetHashCode()
         {
-            if (_staple != null)
+            if (Staple != null)
             {
-                return _staple.GetHashCode();
+                return Staple.GetHashCode();
             }
 
             return 0;

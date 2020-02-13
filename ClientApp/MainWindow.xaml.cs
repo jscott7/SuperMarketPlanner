@@ -82,14 +82,20 @@ namespace SuperMarketPlanner
             }
 
             // Read staples data using Linq
-            XDocument xDocument = XDocument.Load(staplesPath);
-            IEnumerable<string> staples = from x in xDocument.Descendants("Staple")
+            var xDocument = XDocument.Load(staplesPath);
+            IEnumerable<string> staples = from x in xDocument.Descendants("StapleItem")
                                           select (string)x.Attribute("name").Value;
 
-            // For sorted meals
-            // Create a new MealItem and MealsCollection
+            // Backward compatibility with old format
+            if (staples.Count() == 0)
+            {
+                staples = from x in xDocument.Descendants("Staple")
+                          select (string)x.Attribute("name").Value;
+            }
+
+            // For sorted meals we need create a new MealItem and MealsCollection
             // Populate it from the meals path persisted xml
-            // XDocument mealsDocument = XDocument.Load(mealsPath);
+            // var mealsDocument = XDocument.Load(mealsPath);
 
             var sortedStaples = staples.ToList();
             sortedStaples.Sort();
@@ -311,11 +317,10 @@ namespace SuperMarketPlanner
             try
             {
                 var xmlMealDataProvider = (XmlDataProvider)this.FindResource("MealData");
-                SaveXmlDataProvider(xmlMealDataProvider);
+                Persist.PersistMealsToFile(xmlMealDataProvider);
 
                 var staplesCollection = (StaplesCollection)this.FindResource("StaplesCollectionData");
                 string staplesPath = AppDataPath + "\\SuperMarketPlanner\\SuperMarketDataStaples.xml";
-
                 Persist.PersistStaplesToFile(staplesPath, staplesCollection);
 
                 MessageBox.Show("Saved meals and staples", "Successful save", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -323,16 +328,6 @@ namespace SuperMarketPlanner
             catch(Exception ex)
             {
                 MessageBox.Show($"Can't save meals and staples: {ex.Message}", "Failed save", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void SaveXmlDataProvider(XmlDataProvider xmlDataProvider)
-        {
-            var uri = new Uri(xmlDataProvider.Source.ToString());
-            if (uri.IsFile)
-            {
-                var path = uri.AbsolutePath;
-                xmlDataProvider.Document.Save(path);
             }
         }
 

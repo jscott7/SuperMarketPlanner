@@ -6,15 +6,6 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Authors>Jonathan Scott</Authors>
   </PropertyGroup>
-  <!-- <ItemGroup>
-    <None Remove="Images\noresults_uncompressed.ico" />
-    <None Remove="Images\Settings.ico" />
-    <None Remove="ToolbarGraphics\Azure_blue_64x.png" />
-    <None Remove="ToolbarGraphics\FloppyDisk.ico" />
-    <None Remove="ToolbarGraphics\folder_open.ico" />
-    <None Remove="ToolbarGraphics\Generic_Document.ico" />
-    <None Remove="ToolbarGraphics\printer.ico" />
-  </ItemGroup> -->
   <ItemGroup>
     <PackageReference Include="System.Drawing.Common" Version="4.6.0" />
   </ItemGroup>
