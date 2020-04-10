@@ -15,7 +15,9 @@ HTTPServer.ssl_adapter = BuiltinSSLAdapter(
 
 urls = (
 	'/index', 'index',
-        '/meals', 'meals'
+        '/meals', 'meals',
+        '/staples', 'staples',
+        '/mealdata', 'mealdata'
 )
 
 #Global dictionay of common items
@@ -29,6 +31,51 @@ render._keywords['globals']['render'] = render
 
 filedir = '/home/pi/data'
 
+class staples:
+    def GET(self):
+        try:
+            with open(filedir + '/static/staples.xml') as staplesfile:
+                output = staplesfile.read()
+        except:
+            output = 'staples file is missing'
+        return output      
+
+    def POST(self):
+        x = web.data()
+        
+        # Remove the header "data="
+        cleaned = x[9:]
+        
+        # Write the XML string to file
+        fout = open(filedir + '/static/staples.xml', 'w')
+
+        # Decode url included characters
+        fout.write(urllib.unquote_plus(cleaned))
+        fout.close()
+        return x
+
+class mealdata:
+    def GET(self):
+        try:
+            with open(filedir + '/static/mealdata.xml') as staplesfile:
+                output = staplesfile.read()
+        except:
+            output = 'mealdata file is missing'
+        return output
+
+    def POST(self):
+        x = web.data()
+
+        # Remove the header "data="
+        cleaned = x[9:]
+
+        # Write the XML string to file
+        fout = open(filedir + '/static/mealdata.xml', 'w')
+
+        # Decode url included characters
+        fout.write(urllib.unquote_plus(cleaned))
+        fout.close()
+        return x
 
 class index:
     def GET(self):
@@ -36,7 +83,7 @@ class index:
         filename = filedir
 
         if x.date == 'latest':
-           list_of_files = glob.glob( filedir + '/*' )
+           list_of_files = glob.glob( filedir + '/*.xml' )
            latest_file = max(list_of_files, key=os.path.getctime)
            filename = latest_file 
         else:
@@ -60,7 +107,7 @@ class index:
         date = x[:8]
    
         # Write the XML string to file
-        filedir = '/home/pi/data'
+        #filedir = '/home/pi/data'
         fout = open(filedir + '/' + date +'.xml', 'w')
 
 	# Decode url included characters
@@ -71,7 +118,7 @@ class index:
 class meals:
     def GET(self):
         
-        list_of_files = glob.glob( filedir + '/*' )
+        list_of_files = glob.glob( filedir + '/*.xml' )
         latest_file = max(list_of_files, key=os.path.getctime)
 
         tree = ET.parse(latest_file)

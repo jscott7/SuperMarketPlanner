@@ -5,7 +5,9 @@ RUN apt-get -q update && \
     apt-get -qy install \
     python python-pip 
 
-RUN pip install web.py
+RUN pip2 install more-itertools==2.6
+RUN pip2 install jaraco.functools==2.0
+RUN pip2 install web.py==0.51
 
 WORKDIR /app
 

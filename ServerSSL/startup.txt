@@ -1,3 +1,7 @@
+docker ps
+docker stop loving_miszahkani (or whatever the name is)
+docker build -t rest-server-ssl .
+
 pi@raspberrypi:~/Server $ docker run -d --restart always -p 8080:8080 rest-server 
 
 docker run -d --restart always -p 8443:8443 -v /home/pi/NAS/data:/home/pi/data rest-server-ssl
