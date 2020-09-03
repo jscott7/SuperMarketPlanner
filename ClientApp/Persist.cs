@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Windows;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.IO;
 using System.Windows.Data;
@@ -23,18 +22,13 @@ namespace SuperMarketPlanner
             _serverUrl = serverUrl;
         }
 
-        public async Task<DateTime> LoadLatest(SelectedMealCollection mealData, SelectedIngredientsCollection ingredientsData)
+        public async Task<DateTime> LoadLatest(string endPoint, SelectedMealCollection mealData, SelectedIngredientsCollection ingredientsData)
         {
             DateTime startDate = DateTime.MinValue;
 
             try
             {
-                if (_serverUrl == "NOSERVER")
-                {
-                    throw new Exception("No server has been setup. Please go to settings");
-                }
-
-                string data = await ServerGet("");
+                string data = await ServerGet(endPoint);
 
                 var xmlDoc = new XmlDocument();
                 xmlDoc.LoadXml(data);
@@ -102,7 +96,7 @@ namespace SuperMarketPlanner
         /// </summary>
         /// <param name="payload"></param>
         /// <returns></returns>
-        public async Task<string> Post(string payload, DateTime listDate)
+        public async Task<string> Post(string endPoint, string payload, DateTime listDate)
         {
             using (var client = new HttpClient())
             {
@@ -113,15 +107,17 @@ namespace SuperMarketPlanner
                         throw new Exception("No server has been setup. Please go to settings");
                     }
 
+                    var queryUrl = _serverUrl.EndsWith("/") ? _serverUrl + endPoint : _serverUrl + "/" + endPoint;
+
                     // Key is date of start of list in yyyyMMdd format         
                     var postData = new KeyValuePair<string, string>[]
                     {
-                     new KeyValuePair<string, string>(listDate.ToString("yyyyMMdd"), payload)
+                        new KeyValuePair<string, string>(listDate.ToString("yyyyMMdd"), payload)
                     };
 
                     var content = new FormUrlEncodedContent(postData);
 
-                    var response = await client.PostAsync(_serverUrl, content);
+                    var response = await client.PostAsync(queryUrl, content);
 
                     if (!response.IsSuccessStatusCode)
                     {
@@ -147,12 +143,27 @@ namespace SuperMarketPlanner
             }
         }
 
-        public static void PersistStaplesToFile(string staplesPath, StaplesCollection staplesCollection)
+        public async void PersistStaplesToFile(string staplesPath, StaplesCollection staplesCollection)
         {
             var xs = new XmlSerializer(typeof(StaplesCollection));
+
+            var emptyNamespaces = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });     
+            var settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.OmitXmlDeclaration = true;
+
+            string xml;
+            using (StringWriter sw = new StringWriter())
+            using (var writer = XmlWriter.Create(sw, settings))
+            {      
+                xs.Serialize(writer, staplesCollection, emptyNamespaces);
+                xml = sw.ToString();
+            }
+
+            await Post("staples", xml, DateTime.MinValue);
             using (StreamWriter wr = new StreamWriter(staplesPath))
             {
-                xs.Serialize(wr, staplesCollection);
+                wr.Write(xml);
             }
         }
 
@@ -166,7 +177,7 @@ namespace SuperMarketPlanner
             }
         }
 
-        private async Task<string> ServerGet(string request)
+        private async Task<string> ServerGet(string endPoint)
         {
             try
             {
@@ -175,9 +186,10 @@ namespace SuperMarketPlanner
                     throw new Exception("No server has been setup. Please go to settings");
                 }
 
+                var queryUrl = _serverUrl.EndsWith("/") ? _serverUrl + endPoint : _serverUrl + "/" + endPoint;
                 using (var client = new HttpClient())
                 {
-                    var data = await client.GetStringAsync(_serverUrl);
+                    var data = await client.GetStringAsync(queryUrl);
                     return data;
                 }
             }

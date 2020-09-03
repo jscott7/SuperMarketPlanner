@@ -99,7 +99,7 @@
         </DockPanel>
         <DockPanel Grid.Column="0" Grid.Row="1" >
             <TabControl  HorizontalAlignment="Stretch" Name="tabControl1" VerticalAlignment="Stretch" >
-                <TabItem Header="Meals" Name="tabItem1"  FontSize="16" FontFamily="Tahoma">
+                <TabItem Header="Meals" Name="tabItem1" FontSize="16" FontFamily="Tahoma">
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -110,7 +110,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="20px"/>
                             </Grid.RowDefinitions>
-                            <DataGrid Name="mealGrid" RowDetailsVisibilityMode="Collapsed" AllowDrop="True" Background="White" GridLinesVisibility="None" DataContext="{StaticResource MealData}" ItemsSource="{Binding}" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" SelectionUnit="FullRow" SelectionMode="Single" PreviewMouseLeftButtonDown="MealGrid_PreviewMouseLeftButtonDown" MouseMove="MealGrid_MouseMove" CanUserAddRows="True"  Grid.Row="0" Grid.ColumnSpan="2">
+                            <DataGrid Name="mealGrid" HeadersVisibility="None" RowDetailsVisibilityMode="Collapsed" AllowDrop="True" Background="White" GridLinesVisibility="None" DataContext="{StaticResource MealData}" ItemsSource="{Binding}" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" SelectionUnit="FullRow" SelectionMode="Single" PreviewMouseLeftButtonDown="MealGrid_PreviewMouseLeftButtonDown" MouseMove="MealGrid_MouseMove" CanUserAddRows="True" Grid.Row="0" Grid.ColumnSpan="2">
                                 <DataGrid.RowStyle>
                                     <Style TargetType="{x:Type DataGridRow}">
                                         <EventSetter Event="MouseDoubleClick" Handler="MealGrid_RowDoubleClick"/>
@@ -162,7 +162,7 @@
                                 <RowDefinition/>
                                 <RowDefinition Height="20"/>
                             </Grid.RowDefinitions>
-                            <DataGrid Grid.Row="0" Name="staplesGrid" AllowDrop="True" Background="White" GridLinesVisibility="None" ItemsSource="{Binding Source={StaticResource StaplesCollectionData}}" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserSortColumns="True" CanUserResizeColumns="False" CanUserResizeRows="False" SelectionUnit="FullRow" SelectionMode="Single" PreviewMouseLeftButtonDown="StaplesGrid_PreviewMouseLeftButtonDown" MouseMove="StaplesGrid_MouseMove" CanUserAddRows="True">
+                            <DataGrid Grid.Row="0" Name="staplesGrid" HeadersVisibility="None" AllowDrop="True" Background="White" GridLinesVisibility="None" ItemsSource="{Binding Source={StaticResource StaplesCollectionData}}" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserSortColumns="True" CanUserResizeColumns="False" CanUserResizeRows="False" SelectionUnit="FullRow" SelectionMode="Single" PreviewMouseLeftButtonDown="StaplesGrid_PreviewMouseLeftButtonDown" MouseMove="StaplesGrid_MouseMove" CanUserAddRows="True">
                                 <DataGrid.Columns>
                                     <DataGridTemplateColumn>
                                         <DataGridTemplateColumn.CellTemplate>

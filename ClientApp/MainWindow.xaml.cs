@@ -72,6 +72,7 @@ namespace SuperMarketPlanner
             // We need to set the XmlDataProvider to be in the appData folder
             var mealsXmlDataProvider = FindResource("MealData") as XmlDataProvider;
 
+            // TODO load from rest service
             string mealsPath = AppDataPath + "\\SuperMarketPlanner\\SuperMarketDataMeals.xml";
             string staplesPath = AppDataPath + "\\SuperMarketPlanner\\SuperMarketDataStaples.xml";
          
@@ -245,7 +246,7 @@ namespace SuperMarketPlanner
             xmlBuilder.AppendLine("</ShoppingList>");
 
             //http://www.briangrinstead.com/blog/multipart-form-post-in-c
-            await _persist.Post(xmlBuilder.ToString(), _startDate);
+            await _persist.Post("index", xmlBuilder.ToString(), _startDate);
         }
 
         #endregion
@@ -257,7 +258,7 @@ namespace SuperMarketPlanner
             var mealData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
             var ingredientsData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
 
-            _startDate = await _persist.LoadLatest(mealData, ingredientsData);    
+            _startDate = await _persist.LoadLatest("index", mealData, ingredientsData);    
         }
 
         private void NewList_Click(object sender, RoutedEventArgs e)
@@ -321,7 +322,8 @@ namespace SuperMarketPlanner
 
                 var staplesCollection = (StaplesCollection)this.FindResource("StaplesCollectionData");
                 string staplesPath = AppDataPath + "\\SuperMarketPlanner\\SuperMarketDataStaples.xml";
-                Persist.PersistStaplesToFile(staplesPath, staplesCollection);
+             
+                _persist.PersistStaplesToFile(staplesPath, staplesCollection);
 
                 MessageBox.Show("Saved meals and staples", "Successful save", MessageBoxButton.OK, MessageBoxImage.Information);
             }
