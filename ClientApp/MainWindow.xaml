@@ -10,7 +10,7 @@
         <src:SelectedMealCollection x:Key="SelectedMealCollectionData"/>
         <src:SelectedIngredientsCollection x:Key="SelectedIngredientsCollectionData"/>
         <src:StaplesCollection x:Key="StaplesCollectionData"/>
-        
+
         <Style TargetType="TextBlock" x:Key="SelectedMealStyle">
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="FontFamily" Value="Tahoma"/>
@@ -52,7 +52,7 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <ToolBar Height="64" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Name="toolBar1" VerticalAlignment="Stretch" >
+        <ToolBar ToolBarTray.IsLocked="True" Margin="0,3,-14,3" Height="64" Grid.Row="0" Grid.ColumnSpan="4" Name="toolBar1" >
             <Button Click="NewList_Click">
                 <Image Source="ToolbarGraphics\Generic_Document.ico" ToolTip="New List" />
             </Button>
@@ -175,10 +175,10 @@
                                     </DataGridTemplateColumn>
                                     <DataGridTextColumn Binding="{Binding Staple}" FontSize="16" FontFamily="Tahoma" />
                                 </DataGrid.Columns>
-                           <!--     <DataGrid.RowValidationRules>
+                                <!--     <DataGrid.RowValidationRules>
                                     <src:RowValidationRule ValidationStep="UpdatedValue"/>
                                 </DataGrid.RowValidationRules>-->
-                            </DataGrid> 
+                            </DataGrid>
                         </Grid>
                     </ScrollViewer>
                 </TabItem>

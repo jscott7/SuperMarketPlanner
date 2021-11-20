@@ -110,13 +110,21 @@ namespace SuperMarketPlanner
             mealsXmlDataProvider.Source = new Uri(mealsPath);
         }
 
-        private void FirstTimeAppDataSetup(  )
+        /// <summary>
+        /// Copies required data files to User Application Data folder
+        /// </summary>
+        private void FirstTimeAppDataSetup()
         {
-            string xmlSourceDirectory = Directory.GetCurrentDirectory() + "\\Data";
-            string destinationDirectory = AppDataPath + "\\SuperMarketPlanner";
-            Directory.CreateDirectory(destinationDirectory);
-            File.Copy(xmlSourceDirectory + "\\SuperMarketDataMeals.xml", destinationDirectory + "\\SuperMarketDataMeals.xml" );
-            File.Copy(xmlSourceDirectory + "\\SuperMarketDataStaples.xml", destinationDirectory + "\\SuperMarketDataStaples.xml");
+            var xmlSourceDirectory = Path.Combine(Directory.GetCurrentDirectory(), "FirstTimeData");
+            var destinationDirectory = Path.Combine(AppDataPath, "SuperMarketPlanner");
+
+            if (!Directory.Exists(destinationDirectory))
+            {
+                Directory.CreateDirectory(destinationDirectory);
+            }
+
+            File.Copy(Path.Combine(xmlSourceDirectory, "SuperMarketDataMeals.xml"), Path.Combine(destinationDirectory, "SuperMarketDataMeals.xml") );
+            File.Copy(Path.Combine(xmlSourceDirectory, "SuperMarketDataStaples.xml"), Path.Combine(destinationDirectory, "SuperMarketDataStaples.xml") );
         }
 
         #region Printing 
@@ -209,9 +217,9 @@ namespace SuperMarketPlanner
         /// </summary>
         private async void PublishMeals()
         {
-            SelectedMealCollection colData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
-            XmlSerializer xs = new XmlSerializer(typeof(SelectedMealCollection));
-            StringBuilder xmlBuilder = new StringBuilder();
+            var colData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
+            var xs = new XmlSerializer(typeof(SelectedMealCollection));
+            var xmlBuilder = new StringBuilder();
 
             var emptyNamepsaces = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
             var settings = new XmlWriterSettings();
@@ -231,8 +239,8 @@ namespace SuperMarketPlanner
                 }
             }
 
-            SelectedIngredientsCollection shoppingItemsData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
-            XmlSerializer xs2 = new XmlSerializer(typeof(SelectedIngredientsCollection));
+            var shoppingItemsData = (SelectedIngredientsCollection)this.FindResource("SelectedIngredientsCollectionData");
+            var xs2 = new XmlSerializer(typeof(SelectedIngredientsCollection));
 
             using (StringWriter stream = new StringWriter())
             {
@@ -294,7 +302,7 @@ namespace SuperMarketPlanner
             }
 
             // Clean and add new selected items
-            SelectedMealCollection colData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
+            var colData = (SelectedMealCollection)this.FindResource("SelectedMealCollectionData");
             colData.Clear();
 
             for (int unitIndex = 0; unitIndex < numberOfUnits; unitIndex++)

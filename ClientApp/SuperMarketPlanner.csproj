@@ -18,4 +18,12 @@
     <Resource Include="ToolbarGraphics\Generic_Document.ico" />
     <Resource Include="ToolbarGraphics\printer.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="FirstTimeData\SuperMarketDataMeals.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="FirstTimeData\SuperMarketDataStaples.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
